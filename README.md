@@ -14,40 +14,6 @@ Provide a lightweight tool that accepts relational algebra expressions, builds a
 - Transpile AST to SQL with simple optimizations (push selections, remove redundant projections)
 - CLI for quick testing and integration
 
-## Project layout
-
-- `src/core` — core algebra types, AST, and optimizer
-- `src/parser` — parser from expression text to AST
-- `src/sqlgenerator` — SQL generation from AST
-- `src/cli` — small CLI wrapper to run expressions from the command line
-- `tests` — unit and integration tests
-
-## Quick start (CLI)
-
-Build and run the CLI project from the repository root:
-
-```powershell
-dotnet build src/cli
-dotnet run --project src/cli -- "π_{name,age}(σ_{age>30}(employees))"
-```
-
-Expected output: a SQL query that selects `name` and `age` from `employees` where `age > 30`.
-
-## Example
-
-Relational algebra:
-
-```
-π_{name,age}(σ_{age>30}(employees))
-```
-
-Transpiled SQL (illustrative):
-
-```sql
-SELECT name, age
-FROM employees
-WHERE age > 30;
-```
 
 ## Design notes
 
