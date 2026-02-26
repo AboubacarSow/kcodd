@@ -7,21 +7,31 @@
 
 The system follows a classical compiler architecture:
 
+```
 Input Text
-   ↓
-Lexer
-   ↓
-Parser
-   ↓
-Abstract Syntax Tree (AST)
-   ↓
-Logical Plan
-   ↓
-SQL Generator
-   ↓
+   |
+  [Lexer]
+   |
+  [Parser]
+   |
+  [AST] (Abstract Syntax Tree)
+   |
+  [Logical Plan]
+   |
+  [SQL Generator]
+   |
 SQL Output
+```
 
-Each stage transforms the representation into a higher semantic level.
+Each stage transforms the representation into a higher semantic level.  The diagram above is a linear, unidirectional flow where each box is implemented as its own module.
+
+To emphasize flow, here's a horizontal version as well:
+
+```
+Input Text -> Lexer -> Parser -> AST -> Logical Plan -> SQL Generator -> SQL Output
+```
+
+Both diagrams aim to make the compiler-style pipeline explicit.
 
 ---
 
@@ -143,21 +153,40 @@ No other layer depends on CLI.
 
 The following dependencies are allowed:
 
-Lexer → (none)
-Parser → Lexer
-AST → (none)
-LogicalPlan → AST
-SQLGenerator → LogicalPlan
-CLI → All
+```
+          +-----------+
+          |   CLI     |
+          +-----------+
+             |  ^
+             |  |
+     +-------+  |      +-----------+
+     |          |      | SQLGen    |
+     |          |      +-----------+
+ +--------+     |           ^
+ |Lexer   |     |           |
+ +--------+     |      +----+------+
+      |         |      |Logical    |
+      v         |      |Plan       |
+   +-------+    |      +----+------+
+   |Parser|---- +           |
+   +-------+                v
+      |                 +-----+
+      v                 | AST |
+    +-----+             +-----+
+    | AST |
+    +-----+
+```
 
-The following dependencies are forbidden:
+In this ASCII diagram, arrows point in the direction of allowed dependencies. The CLI sits at the top and may depend on every other component, but no component depends back on the CLI.  The lexer and AST are leaf nodes with no incoming arrows.
+
+The following dependencies are forbidden (to prevent tight coupling):
 
 - SQLGenerator → Parser
 - Parser → SQLGenerator
 - LogicalPlan → CLI
 - AST → SQLGenerator
 
-These rules prevent tight coupling.
+Sticking to these rules ensures layers remain acyclic and responsibilities remain clean.
 
 ---
 
@@ -176,10 +205,23 @@ SQL generation occurs only after validation passes.
 
 The architecture is designed to allow:
 
-LogicalPlan → Optimizer → SQLGenerator
-LogicalPlan → ExecutionEngine
+```
+LogicalPlan
+    |
+    +-> Optimizer
+    |       |
+    |       +-> SQLGenerator
+    |
+    +-> ExecutionEngine
+```
 
-This ensures future evolution without rewriting earlier layers.
+or viewed horizontally:
+
+```
+AST -> LogicalPlan -> { Optimizer -> SQLGenerator | ExecutionEngine }
+```
+
+These extension points make it easy to insert an optimizer phase or switch to a runtime execution engine without altering the parser or lexer.  The diagrams highlight branching possibilities for future development.
 
 ---
 
