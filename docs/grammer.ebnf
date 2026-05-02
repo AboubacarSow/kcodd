@@ -1,0 +1,71 @@
+expression ::= projection
+             | selection
+             | join
+             | rename
+             | relation
+             | "(" expression ")"
+
+
+
+projection ::= ("π" | "PROJECT")
+               attribute_list
+               "(" expression ")"
+
+
+
+selection ::= ("σ" | "SELECT")
+              condition
+              "(" expression ")"
+
+
+
+join ::= ("⋈" | "JOIN")
+         "(" expression "," expression "," condition ")"
+
+
+
+rename ::= ("ρ" | "RENAME")
+           identifier
+           "(" expression ")"
+
+
+relation ::= identifier
+
+
+attribute_list ::= identifier ("," identifier)*
+
+
+condition ::= disjunction
+
+disjunction ::= conjunction (or_op conjunction)*
+
+conjunction ::= negation_expr (and_op negation_expr)*
+
+negation_expr ::= negation_expr_inner
+
+negation_expr_inner ::= ("¬" | "NOT") negation_expr_inner
+                      | comparison
+                      | "(" condition ")"
+
+
+comparison ::= operand comparator operand
+
+operand ::= identifier | literal
+
+comparator ::= "=" | "!=" | "<" | ">" | "<=" | ">="
+
+
+and_op ::= "AND" | "∧"
+
+or_op  ::= "OR"  | "∨"
+
+negation ::= "NOT" | "¬"
+
+
+identifier ::= letter (letter | digit | "_")*
+
+literal ::= number | string
+
+number ::= digit+
+
+string ::= "'" (any_char)* "'"
