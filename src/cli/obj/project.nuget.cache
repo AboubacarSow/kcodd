@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aRpYrHHwODs=",
+  "dgSpecHash": "OEgeXCeLf60=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ABOUBACAR\\source\\systems\\ra-engine\\src\\cli\\cli.csproj",
+  "projectFilePath": "/home/bouba/source/repos/ra-engine/src/cli/cli.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
