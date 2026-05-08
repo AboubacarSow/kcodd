@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("cli")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c35fa3112c883aa9aa5c597f3fd663c844e1d8c5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3256ae9890d3f3a834a6fb962f51b13dd9f12470")]
 [assembly: System.Reflection.AssemblyProductAttribute("cli")]
 [assembly: System.Reflection.AssemblyTitleAttribute("cli")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

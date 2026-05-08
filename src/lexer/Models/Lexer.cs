@@ -20,6 +20,10 @@ public class Lexer
 
         char current = _input[_position];
 
+        var multiToken= TryReadMultiCharOperator();
+        if(multiToken!= null)
+            return multiToken;
+
         if(SingleCharTokens.TryGetValue(current, out var type))
         {
             _position++;
@@ -103,6 +107,30 @@ public class Lexer
         return new Token(TokenType.STRING, value);
     }
     
+    private Token? TryReadMultiCharOperator()
+    {
+        if (Match("<="))
+            return new Token(TokenType.LTE, "<=");
+
+        if (Match(">="))
+            return new Token(TokenType.GTE, ">=");
+
+        if (Match("!="))
+            return new Token(TokenType.NEQ, "!=");
+
+        return null;
+    }
+    private bool Match(string expected)
+    {
+        if(_position + expected.Length > _input.Length)
+            return false;
+        var result = _input.Substring(_position,expected.Length) == expected;
+        if(result)
+        {
+            _position += expected.Length;
+        }
+        return result;
+    }
     private static readonly Dictionary<char, TokenType> SingleCharTokens = new()
     {
         ['('] = TokenType.LPAREN,
@@ -116,7 +144,11 @@ public class Lexer
 
         ['∧'] = TokenType.AND,
         ['∨'] = TokenType.OR,
-        ['¬'] = TokenType.NOT
+        ['¬'] = TokenType.NOT,
+        ['>'] = TokenType.GT,
+        ['<'] = TokenType.LT,
+        ['='] = TokenType.EQ,
+
     };
 
     private static readonly Dictionary<string, TokenType> Keywords = new()

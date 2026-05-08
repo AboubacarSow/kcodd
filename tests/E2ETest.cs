@@ -1,4 +1,7 @@
-﻿
+﻿using lexer.Models;
+using parser.Models;
+using sqlgenerator.Services;
+
 namespace tests;
 
 public class E2ETest

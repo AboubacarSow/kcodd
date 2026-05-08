@@ -15,11 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\src\sqlgenerator\sqlgenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sqlgenerator\sqlgenerator.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>
