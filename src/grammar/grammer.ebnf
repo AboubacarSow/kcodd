@@ -21,7 +21,7 @@ selection ::= ("σ" | "SELECT")
 
 natural-join ::= expression ("⋈" | "JOIN") expression  
 
-theta-join ::= expression "[" ("⋈" | "JOIN") "]" condition  expression  
+theta-join ::= expression  ("⋈" | "JOIN") "[" condition "]" expression  
 
 
 
