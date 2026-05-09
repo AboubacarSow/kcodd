@@ -14,11 +14,12 @@ class Program
     static readonly ConsoleColor SqlColor        = ConsoleColor.Yellow;
     static readonly ConsoleColor PromptColor     = ConsoleColor.Cyan;
 
-    static int ConsoleWidth => Math.Min(Console.WindowWidth > 0 ? Console.WindowWidth : 80, 80);
+    static int ConsoleWidth => Math.Min(Console.WindowWidth > 0 ? Console.WindowWidth : 120, 80);
 
     // ── Entry point ────────────────────────────────────────────────────────────
     static void Main(string[] args)
     {
+        Console.InputEncoding  = System.Text.Encoding.UTF8;
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         Console.CursorVisible  = true;
         Console.ResetColor();
@@ -238,12 +239,12 @@ class Program
     static void PrintGoodbye()
     {
         Console.WriteLine();
-        WriteLineColored("  ──────────────────────────────────────", TextDim);
+        WriteLineColored("  ─────────────────────────────────────────────────────────────", TextDim);
         WriteColored("  ", TextDim);
-        WriteColored("Goodbye.", AccentSecondary);
+        WriteColored("\t\tGoodbye.", AccentSecondary);
         WriteColored("  Session ended.", TextDim);
         Console.WriteLine();
-        WriteLineColored("  ──────────────────────────────────────", TextDim);
+        WriteLineColored("  ─────────────────────────────────────────────────────────────", TextDim);
         Console.WriteLine();
     }
 
