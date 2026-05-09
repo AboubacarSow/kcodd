@@ -8,17 +8,14 @@ public class Parser
 {
     private readonly Lexer _lexer;
     private Token _current;
-    private Token _previous;
     public Parser(Lexer lexer)
     {
         _lexer = lexer;
-        _previous = default!;
         _current = _lexer.NextToken();
     }
 
     private void Eat(TokenType type)
     {
-        _previous = _current;
         if (_current.Type == type)
             _current = _lexer.NextToken();
         else
@@ -46,20 +43,26 @@ public class Parser
         {
             TokenType op = _current.Type;
             Eat(op);
-
+            var condition = null as ConditionNode;
+            if(_current.Type == TokenType.LSB)
+            {
+                Eat(TokenType.LSB);
+                condition = ParseCondition();
+                Eat(TokenType.RSB);
+            }
             var right = ParseExpression();
 
-            left = BuildBinaryNode(op,left,right);
+            left = BuildBinaryNode(op,left,right,condition!);
         }
 
         return left;
     } 
     private ExpressionNode BuildBinaryNode(TokenType type,
-    ExpressionNode left, ExpressionNode right)
+    ExpressionNode left, ExpressionNode right, ConditionNode condition = null!)
     {
         return type switch
         {
-            TokenType.JOIN => new JoinNode(left,right),
+            TokenType.JOIN =>condition ==null ? new JoinNode(left,right) : new ThetaJoinNode(left,right,condition),
             TokenType.DIFF => new DifferenceNode(left,right),
             _ => throw new Exception($"Unexpected token type: {type.ToString()}")
         };
@@ -166,11 +169,8 @@ public class Parser
 
             return condition;
         }
-
         return ParseComparison();
     }
-
-
 
     private ConditionNode ParseComparison()
     {
@@ -193,10 +193,8 @@ public class Parser
         Eat(opType);
 
         string right = _current.Value;
-
-        if (_current.Type == TokenType.STRING)
-            Eat(TokenType.STRING);
-        else if (_current.Type == TokenType.IDENTIFIER)
+     
+        if (_current.Type == TokenType.IDENTIFIER)
             Eat(TokenType.IDENTIFIER);
         else if (_current.Type == TokenType.NUMBER)
             Eat(TokenType.NUMBER);
@@ -210,9 +208,6 @@ public class Parser
     {
         return ParseDisjunction();
     }
-
-
-
     private ConditionNode ParseDisjunction()
     {
         var left = ParseConjunction();

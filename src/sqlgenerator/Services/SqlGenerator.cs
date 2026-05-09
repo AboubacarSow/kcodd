@@ -16,6 +16,8 @@ public class SqlGenerator
 
             JoinNode join => GenerateJoinSql(join),
 
+            ThetaJoinNode thetaJoin => GenerateThetaJoinSql(thetaJoin),
+
             RenameNode rename => GenerateRenameSql(rename),
 
             _ => throw new Exception($"Unsupported node type: {node.GetType().Name}")
@@ -67,7 +69,14 @@ public class SqlGenerator
 
         return $"{leftsql} NATURAL JOIN {rightSql}";
     }
+    private string GenerateThetaJoinSql(ThetaJoinNode node)
+    {
+        var leftsql = GenerateSql(node.Left);
+        var rightSql = ExtractTableName(node.Right);
+        var conditionSql = GenerationConditionSql(node.Condition);
 
+        return $"{leftsql} JOIN {rightSql} ON {conditionSql}";
+    }
     private string ExtractTableName(ExpressionNode node)
     {
         if (node is RelationNode relation)
