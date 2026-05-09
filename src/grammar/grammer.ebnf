@@ -8,19 +8,20 @@ expression ::= projection
 
 
 projection ::= ("π" | "PROJECT")
-               attribute_list
+               "[" attribute_list "]"
                "(" expression ")"
 
 
 
 selection ::= ("σ" | "SELECT")
-              condition
+              "[" condition "]"
               "(" expression ")"
 
 
 
-join ::= ("⋈" | "JOIN")
-         "(" expression "," expression "," condition ")"
+natural-join ::= expression ("⋈" | "JOIN") expression  
+
+theta-join ::= expression "[" ("⋈" | "JOIN") "]" condition  expression  
 
 
 
@@ -55,9 +56,9 @@ operand ::= identifier | literal
 comparator ::= "=" | "!=" | "<" | ">" | "<=" | ">="
 
 
-and_op ::= "AND" | "∧"
+and_op ::= "and" | "∧"
 
-or_op  ::= "OR"  | "∨"
+or_op  ::= "or"  | "∨"
 
 negation ::= "NOT" | "¬"
 

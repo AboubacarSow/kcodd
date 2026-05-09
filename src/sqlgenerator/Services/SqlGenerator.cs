@@ -41,7 +41,7 @@ public class SqlGenerator
         return condition switch
         {
             ComparisonNode comparison => $"({GenerateComparisonSql(comparison)})",
-            AndNode and => $"({GenerationConditionSql(and.Left)}) AND ({GenerationConditionSql(and.Right)})",
+            AndNode and => $"{GenerationConditionSql(and.Left)} AND {GenerationConditionSql(and.Right)}",
             OrNode or => $"({GenerationConditionSql(or.Left)}) OR ({GenerationConditionSql(or.Right)})",
             NotNode not => $"(NOT {GenerationConditionSql(not.Inner)})",
             _ => throw new Exception($"Unsupported condition type: {condition.GetType().Name}")
@@ -62,25 +62,24 @@ public class SqlGenerator
 
     private string GenerateJoinSql(JoinNode node)
     {
-        var leftSql = ExtractTableName(node.Left);
+        var leftsql = GenerateSql(node.Left);
         var rightSql = ExtractTableName(node.Right);
 
-        var conditionSql = GenerationConditionSql(node.Condition);
-
-        return $"SELECT * FROM {leftSql} JOIN {rightSql} ON {conditionSql}";
+        return $"{leftsql} NATURAL JOIN {rightSql}";
     }
 
     private string ExtractTableName(ExpressionNode node)
     {
         if (node is RelationNode relation)
             return relation.Name;
+  
         throw new Exception($"Unsupported expression type for join: {node.GetType().Name}");
     }
 
     private string GenerateRenameSql(RenameNode node)
     {
         var sourceSql = GenerateSql(node.Source);
-        return sourceSql.Replace("*", $"{string.Join(", ", node.Alias)}");
+        return $"({sourceSql}) AS {node.Alias}";
     }
 
     private string GenerateRelationSql(RelationNode node)

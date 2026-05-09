@@ -28,7 +28,7 @@ class Program
             if (string.IsNullOrWhiteSpace(input))
                 continue;
 
-            if (input.ToLower() == "exit")
+            if (input.ToLower().Trim() == "exit")
                 break;
 
             try

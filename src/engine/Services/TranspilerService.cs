@@ -14,8 +14,11 @@ public class TranspilerService : ITranspilerService
     public string Transpile(string input)
     {
         var lexer = new Lexer(input);
+
         var parser = new Parser(lexer);
-        var ast = parser.ParseExpression();
+
+        var ast = parser.Parse();
+
         var sqlGenerator = new SqlGenerator();
         return sqlGenerator.GenerateSql(ast);
     }

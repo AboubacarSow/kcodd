@@ -8,28 +8,68 @@ public class Parser
 {
     private readonly Lexer _lexer;
     private Token _current;
-
+    private Token _previous;
     public Parser(Lexer lexer)
     {
         _lexer = lexer;
+        _previous = default!;
         _current = _lexer.NextToken();
     }
 
     private void Eat(TokenType type)
     {
+        _previous = _current;
         if (_current.Type == type)
             _current = _lexer.NextToken();
         else
             throw new Exception($"Expected {type}, got {_current.Type}");
     }
+    public ExpressionNode Parse()
+    {
+        var expr = ParseBinaryExpression();
+        return expr;
+    }
+    private bool IsBinaryExpression(){
+        return _current.Type switch
+        {
+            TokenType.JOIN => true,
+            TokenType.DIFF =>true,
+            _ => false
+        };
+    }
 
-    public ExpressionNode ParseExpression()
+    private ExpressionNode ParseBinaryExpression()
+    {
+        var left = ParseExpression();
+
+        while(IsBinaryExpression())
+        {
+            TokenType op = _current.Type;
+            Eat(op);
+
+            var right = ParseExpression();
+
+            left = BuildBinaryNode(op,left,right);
+        }
+
+        return left;
+    } 
+    private ExpressionNode BuildBinaryNode(TokenType type,
+    ExpressionNode left, ExpressionNode right)
+    {
+        return type switch
+        {
+            TokenType.JOIN => new JoinNode(left,right),
+            TokenType.DIFF => new DifferenceNode(left,right),
+            _ => throw new Exception($"Unexpected token type: {type.ToString()}")
+        };
+    }
+    private ExpressionNode ParseExpression()
     {
         return _current.Type switch
         {
             TokenType.PROJECT => ParseProjection(),
             TokenType.SELECT => ParseSelection(),
-            TokenType.JOIN => ParseJoin(),
             TokenType.RENAME => ParseRename(),
             TokenType.LPAREN => ParseParenthesized(),
             TokenType.IDENTIFIER => ParseRelation(),
@@ -55,7 +95,9 @@ public class Parser
     {
         Eat(TokenType.PROJECT);
 
+        Eat(TokenType.LSB);
         var attributes = ParseAttributeList();
+        Eat(TokenType.RSB);
 
         Eat(TokenType.LPAREN);
         var source = ParseExpression();
@@ -102,8 +144,10 @@ public class Parser
     private ExpressionNode ParseSelection()
     {
         Eat(TokenType.SELECT);
+        Eat(TokenType.LSB);
 
         var condition = ParseCondition();
+        Eat(TokenType.RSB);
 
         Eat(TokenType.LPAREN);
         var source = ParseExpression();
@@ -124,29 +168,6 @@ public class Parser
         }
 
         return ParseComparison();
-    }
-
-
-
-    private ExpressionNode ParseJoin()
-    {
-        Eat(TokenType.JOIN);
-
-        Eat(TokenType.LPAREN);
-
-        var left = ParseExpression();
-
-        Eat(TokenType.COMMA);
-
-        var right = ParseExpression();
-
-        Eat(TokenType.COMMA);
-
-        var condition = ParseCondition();
-
-        Eat(TokenType.RPAREN);
-
-        return new JoinNode(left, right, condition);
     }
 
 
@@ -175,6 +196,8 @@ public class Parser
 
         if (_current.Type == TokenType.STRING)
             Eat(TokenType.STRING);
+        else if (_current.Type == TokenType.IDENTIFIER)
+            Eat(TokenType.IDENTIFIER);
         else if (_current.Type == TokenType.NUMBER)
             Eat(TokenType.NUMBER);
         else
@@ -182,8 +205,6 @@ public class Parser
 
         return new ComparisonNode(left, op, right);
     }
-
-
 
     private ConditionNode ParseCondition()
     {
@@ -196,12 +217,18 @@ public class Parser
     {
         var left = ParseConjunction();
 
-        while (_current.Type == TokenType.OR)
+        while (_current.Type == TokenType.OR || _current.Type == TokenType.AND)
         {
-            Eat(TokenType.OR);
-            var right = ParseConjunction();
-
-            left = new OrNode(left, right);
+            if(_current.Type == TokenType.OR)
+            {
+                Eat(TokenType.OR);
+                left = new AndNode(left,ParseConjunction());
+            }
+            else
+            {
+                Eat(TokenType.AND);
+                left = new OrNode(left, ParseConjunction());
+            }
         }
 
         return left;

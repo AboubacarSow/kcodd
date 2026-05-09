@@ -4,8 +4,11 @@ public enum TokenType
     // Relational Algebra Operators
     SELECT,      
     PROJECT,     
-    JOIN,      
-    RENAME,     
+    RENAME,   
+
+    //Inner Operator  
+    JOIN,     
+    DIFF, 
 
     // Logical Operators
     AND,         
@@ -13,7 +16,7 @@ public enum TokenType
     NOT,        
 
     // Structure
-    LPAREN, RPAREN, COMMA,
+    LPAREN, RPAREN, COMMA,LSB, RSB,
 
     // Comparisons
     EQ, NEQ, LT, GT, LTE, GTE,

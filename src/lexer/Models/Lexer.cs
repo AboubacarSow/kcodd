@@ -8,9 +8,11 @@ public class Lexer
     public Lexer(string input)
     {
         _input = input;
+        
         _position = 0;
     }
-
+    private string[] _internalOperationList = ["JOIN", "INT", "UN"];
+    private char [] _doubleCharOperator = ['>','<','!'];
     public Token NextToken()
     {
         SkipWhitespace();
@@ -20,9 +22,16 @@ public class Lexer
 
         char current = _input[_position];
 
-        var multiToken= TryReadMultiCharOperator();
-        if(multiToken!= null)
-            return multiToken;
+        if(_doubleCharOperator.Contains(current) 
+            && _position + 1 < _input.Length
+            && _input[_position+1]=='=' )
+        {                
+                var multiToken= TryReadMultiCharOperator();
+                if(multiToken!= null)
+                    return multiToken;
+            
+        }
+    
 
         if(SingleCharTokens.TryGetValue(current, out var type))
         {
@@ -35,9 +44,13 @@ public class Lexer
 
         if (char.IsDigit(current))
             return ScanNumber();
-
-        if (current == '\'')
+        //why checking this ?
+        //
+        if(current =='\'')
             return ScanString();
+        //check the end of the _input 
+        if(_position >= _input.Length)
+            return new Token(TokenType.EOF, "");
 
         throw new Exception($"Unexpected character: {current}");
     }
@@ -63,7 +76,9 @@ public class Lexer
         int start = _position;
 
         while (_position < _input.Length &&
-            (char.IsLetterOrDigit(_input[_position]) || _input[_position] == '_'))
+            (char.IsLetterOrDigit(_input[_position]) 
+            || _input[_position] == '_' 
+            || _input[_position]=='.'))
         {
             _position++;
         }
@@ -136,14 +151,14 @@ public class Lexer
         ['('] = TokenType.LPAREN,
         [')'] = TokenType.RPAREN,
         [','] = TokenType.COMMA,
+        ['['] = TokenType.LSB,
+        [']'] = TokenType.RSB,
 
         ['π'] = TokenType.PROJECT,
         ['σ'] = TokenType.SELECT,
         ['⋈'] = TokenType.JOIN,
         ['ρ'] = TokenType.RENAME,
 
-        ['∧'] = TokenType.AND,
-        ['∨'] = TokenType.OR,
         ['¬'] = TokenType.NOT,
         ['>'] = TokenType.GT,
         ['<'] = TokenType.LT,
