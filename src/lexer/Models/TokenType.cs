@@ -26,5 +26,6 @@ public enum TokenType
     NUMBER,
     STRING,
 
-    EOF
+    EOF,
+    THETA_JOIN
 }

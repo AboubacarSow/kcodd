@@ -5,6 +5,7 @@
 
 <PageTitle>Compiler — RA Engine</PageTitle>
 
+
 <div class="compiler-page">
 
     <nav class="nav">
@@ -26,7 +27,9 @@
                 <div class="op-grid">
                     @foreach (var op in _ops)
                     {
-                        <button class="op-key" title="@op.Name" @onclick="() => Insert(op.Insert)">
+                        <button class="op-key"
+                                title="@op.Name"
+                                @onclick="() => Insert(op.Insert)">
                             <span class="k-sym">@op.Sym</span>
                             <span class="k-name">@op.Name</span>
                         </button>
@@ -61,7 +64,9 @@
                     <span class="sidebar-label">History</span>
                     @foreach (var h in ((IEnumerable<string>)_history).Reverse().Take(8))
                     {
-                        <div class="history-item" title="@h" @onclick="() => UseSnippet(h)">
+                        <div class="history-item"
+                             title="@h"
+                             @onclick="() => UseSnippet(h)">
                             @h
                         </div>
                     }
@@ -72,18 +77,34 @@
         <!-- Main -->
         <main class="main-panel">
 
-           <form onsubmit="return false;">
-                <textarea
-                    class="input-area"
-                    placeholder="Enter relational algebra expression here..."
-                    @bind="_input"
-                    @onkeydown="HandleKey"
-                ></textarea>
-                <button class="btn-submit" @onclick="Transpile" disabled="@(_loading || string.IsNullOrWhiteSpace(_input))">
-                    @_loading ? "Transpiling..." : "Transpile"
-                </button>
-                <button class="btn-clear" @onclick="Clear" disabled="@_loading">Clear</button>
-            </form> 
+            <div class="input-area">
+                <label for="raInput">Expression</label>
+                <textarea id="raInput"
+                          class="ra-input"
+                          placeholder="σ age > 18 (Student)"
+                          @bind="_input"
+                          @bind:event="oninput"
+                          @onkeydown="HandleKey"
+                          @key="_inputKey"
+                          rows="3"></textarea>
+                <div class="input-footer">
+                    <button class="btn-primary"
+                            @onclick="Transpile"
+                            disabled="@(_loading || string.IsNullOrWhiteSpace(_input))">
+                        @if (_loading)
+                        {
+                            <span class="spinner"></span>
+                            <span>Running</span>
+                        }
+                        else
+                        {
+                            <span>Run</span>
+                        }
+                    </button>
+                    <button class="btn-ghost" @onclick="async () => Clear()">Clear</button>
+                    <span class="input-hint">Ctrl + Enter to run</span>
+                </div>
+            </div>
 
             <div class="output-area" id="outputPane">
                 @if (_results.Count == 0)
@@ -101,7 +122,13 @@
                                 <span class="result-status @(r.IsError ? "err" : "ok")">
                                     @(r.IsError ? "Error" : "SQL generated")
                                 </span>
-                                <span class="result-meta">@r.At.ToString("HH:mm:ss")</span>
+                                <div class="result-meta-group">
+                                    @if (r.Elapsed is not null)
+                                    {
+                                        <span class="result-elapsed">@r.Elapsed</span>
+                                    }
+                                    <span class="result-meta">@r.At.ToString("HH:mm:ss")</span>
+                                </div>
                             </div>
 
                             <div class="result-input-row">@r.Ra</div>
@@ -120,7 +147,8 @@
                             @if (!r.IsError)
                             {
                                 <div class="result-footer">
-                                    <button class="btn-copy @(r.Copied ? "copied" : "")" @onclick="() => Copy(r)">
+                                    <button class="btn-copy @(r.Copied ? "copied" : "")"
+                                            @onclick="() => Copy(r)">
                                         @(r.Copied ? "Copied" : "Copy SQL")
                                     </button>
                                 </div>
@@ -133,34 +161,31 @@
     </div>
 </div>
 
+
 @code {
     string _input = "";
+    int     _inputKey = 0;  
+
     bool _loading;
     List<Result> _results = [];
     List<string> _history = [];
 
-    // ── Operators ──────────────────────────────────────────────────────────────
-    
-
-    readonly Op[] _ops = Tools.Operators;
+    readonly Op[] _ops = Tools.Ops;
     readonly string[] _cmp = ["=", "≠", "<", ">", "≤", "≥"];
-
     readonly Snippet[] _snippets = Tools.Snippets;
-    
-
-    // ── Actions ────────────────────────────────────────────────────────────────
-
     void Insert(string text)
     {
         _input = (_input ?? "") + text;
+        _inputKey++;
     }
-
-   void UseSnippet(string code) => _input = code;
- 
-
+    void UseSnippet(string code) {
+        _input = code;
+        _inputKey++;
+    }
     void  Clear()
     {
         _input = "";
+        _inputKey++;
         _results.Clear();
        
     }
@@ -181,12 +206,15 @@
         var ra = _input!.Trim();
         try
         {
+            var sw = Stopwatch.StartNew();
             string sql = Transpiler.Transpile(ra);
-            _results.Add(new Result(ra, sql, false, DateTime.Now));
+            sw.Stop();
+            _results.Add(new Result(ra, sql, false, DateTime.Now,
+             sw.ElapsedMilliseconds.ToString("F2") + " ms"));
         }
         catch (Exception ex)
         {
-            _results.Add(new Result(ra, ex.Message, true, DateTime.Now));
+            _results.Add(new Result(ra, ex.Message, true, DateTime.Now,null));
         }
         finally
         {

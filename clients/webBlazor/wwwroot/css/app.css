@@ -214,6 +214,8 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    /* sidebar scrolls independently */
+    height: 100%;
 }
 
 .sidebar-label {
@@ -327,10 +329,12 @@ html, body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    height: 100%;
     background: var(--bg);
 }
 
 .input-area {
+    flex-shrink: 0;
     padding: 1.25rem 1.5rem 1rem;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -468,6 +472,22 @@ html, body {
     font-size: 0.67rem;
     color: var(--text-3);
     font-family: var(--font-mono);
+}
+
+.result-meta-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.result-elapsed {
+    font-size: 0.67rem;
+    font-family: var(--font-mono);
+    color: var(--text-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
 }
 
 .result-input-row {

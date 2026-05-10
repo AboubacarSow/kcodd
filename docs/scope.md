@@ -19,8 +19,11 @@ The following Relational Algebra operators are supported:
 
 - Selection (σ)
 - Projection (π)
-- Inner Join (⨝)
+- Natural Join (⨝)
+- Theta Join (⨝θ)
 - Rename (ρ)
+
+
 - Union (∪)
 - Difference (−)
 - Aggregation (γ)
@@ -53,8 +56,8 @@ The engine uses symbolic Relational Algebra syntax.
 
 Example:
 
-π name (
-    σ age > 18 (
+π [name] (
+    σ [age > 18] (
         Users
     )
 )
