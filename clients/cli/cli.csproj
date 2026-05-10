@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\engine\engine.csproj" />
+    <ProjectReference Include="..\..\src\transpiler\transpiler.csproj" />
   </ItemGroup>
 
 </Project>

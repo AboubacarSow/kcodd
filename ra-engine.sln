@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sqlgenerator", "src\sqlgene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{702F324B-ADB3-4945-A5EF-4791D1AD72E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engine", "src\engine\engine.csproj", "{6B7D4109-0082-406B-AE2F-61BE4F1946D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "transpiler", "src\transpiler\transpiler.csproj", "{6B7D4109-0082-406B-AE2F-61BE4F1946D4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clients", "clients", "{9123F88B-E531-3118-42D7-ED8CEF4BD00E}"
 EndProject

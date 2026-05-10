@@ -2,7 +2,7 @@ using lexer.Models;
 using parser.Models;
 using sqlgenerator.Services;
 
-namespace engine.Services;
+namespace transpiler.Services;
 
 public interface ITranspilerService
 {

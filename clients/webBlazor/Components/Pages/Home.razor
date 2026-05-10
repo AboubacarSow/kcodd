@@ -1,7 +1,45 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>RA Engine — Relational Algebra Transpiler</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home">
+    <div class="home-inner">
 
-Welcome to your new app.
+        <div class="home-logo">RA</div>
+
+        <h1 class="home-title">Relational Algebra<br/>to SQL</h1>
+        <p class="home-sub">
+            Write RA expressions using standard operators.<br/>
+            Get clean SQL output instantly.
+        </p>
+
+        <div class="home-ops">
+            @foreach (var op in _ops)
+            {
+                <div class="op-pill">
+                    <span class="sym">@op.Sym</span>
+                    @op.Name
+                </div>
+            }
+        </div>
+
+        <a class="home-cta" href="/compiler">
+            Open compiler →
+        </a>
+    </div>
+</div>
+
+@code {
+    record Op(string Sym, string Name);
+
+    readonly Op[] _ops =
+    [
+        new("σ",  "Selection"),
+        new("π",  "Projection"),
+        new("ρ",  "Rename"),
+        new("⋈",  "Natural join"),
+        new("⋈θ", "Theta join"),
+        new("∧",  "And"),
+        new("∨",  "Or"),
+    ];
+}

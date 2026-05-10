@@ -4,17 +4,31 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RA Engine — Relational Algebra Transpiler</title>
     <base href="/" />
-    <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
-    <link rel="stylesheet" href="@Assets["app.css"]" />
-    <link rel="stylesheet" href="@Assets["webBlazor.styles.css"]" />
-    <ImportMap />
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="css/app.css" />
     <HeadOutlet />
 </head>
 
 <body>
-    <Routes />
+    <div class="noise-overlay"></div>
+    <div class="scanlines"></div>
+    <div id="app">
+        <Routes />
+    </div>
+    <script>
+        // Add a subtle fade-in effect on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.style.opacity = 0;
+            setTimeout(() => {
+                document.body.style.transition = "opacity 0.5s ease-in";
+                document.body.style.opacity = 1;
+            }, 100);
+        });
+    </script>
+    <script src="js/interop.js"></script>
     <script src="_framework/blazor.web.js"></script>
 </body>
 

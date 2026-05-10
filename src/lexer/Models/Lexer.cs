@@ -11,8 +11,7 @@ public class Lexer
         
         _position = 0;
     }
-    private string[] _internalOperationList = ["JOIN", "INT", "UN"];
-    private char [] _doubleCharOperator = ['>','<','!'];
+    private char [] _doubleCharOperator = ['>','<',];
     public Token NextToken()
     {
         SkipWhitespace();
@@ -130,9 +129,6 @@ public class Lexer
         if (Match(">="))
             return new Token(TokenType.GTE, ">=");
 
-        if (Match("!="))
-            return new Token(TokenType.NEQ, "!=");
-
         return null;
     }
     private bool Match(string expected)
@@ -163,6 +159,7 @@ public class Lexer
         ['>'] = TokenType.GT,
         ['<'] = TokenType.LT,
         ['='] = TokenType.EQ,
+        ['≠'] = TokenType.NEQ
 
     };
 

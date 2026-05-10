@@ -53,7 +53,7 @@ comparison ::= operand comparator operand
 
 operand ::= identifier | literal
 
-comparator ::= "=" | "!=" | "<" | ">" | "<=" | ">="
+comparator ::= "=" | "≠" | "<" | ">" | "<=" | ">="
 
 
 and_op ::= "and" | "∧"

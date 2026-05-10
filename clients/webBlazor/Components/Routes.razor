@@ -1,6 +1,15 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
+﻿<Router AppAssembly="typeof(App).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <RouteView RouteData="routeData" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView>
+            <div style="padding:2rem; font-family:monospace; color:#4a6274;">
+                <p>404 — Expression not found.</p>
+                <a href="/" style="color:#00d4ff;">← Return home</a>
+            </div>
+        </LayoutView>
+    </NotFound>
 </Router>
