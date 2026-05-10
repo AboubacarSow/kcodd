@@ -20,10 +20,8 @@ public class Lexer
             return new Token(TokenType.EOF, "");
 
         char current = _input[_position];
-
-        if(_doubleCharOperator.Contains(current) 
-            && _position + 1 < _input.Length
-            && _input[_position+1]=='=' )
+        if (_doubleCharOperator.Contains(current) && _position + 1 < _input.Length
+            && (_input[_position+1]=='=' || _input[_position+1]== 'θ'))
         {                
                 var multiToken= TryReadMultiCharOperator();
                 if(multiToken!= null)
@@ -129,8 +127,8 @@ public class Lexer
         if (Match(">="))
             return new Token(TokenType.GTE, ">=");
 
-        if (Match("⋈θ"))
-            return new Token(TokenType.THETA_JOIN, "⋈θ");
+        if (Match("⨝θ"))
+            return new Token(TokenType.THETA_JOIN, "⨝θ");
 
         return null;
     }

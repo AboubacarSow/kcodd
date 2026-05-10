@@ -1,20 +1,43 @@
 @page "/compiler"
+@using System.Text.Json
 
 @inject TranspilerService Transpiler
 @inject IJSRuntime JS
 
-<PageTitle>Compiler — RA Engine</PageTitle>
+@rendermode InteractiveServer
 
+<PageTitle>Compiler — RA Engine</PageTitle>
 
 <div class="compiler-page">
 
     <nav class="nav">
         <a class="nav-brand" href="/">
-            <div class="nav-brand-mark">RA</div>
+            <div class="nav-brand-mark" style=@(_isDark ? "background-color: #333; color: #fff;" : "background-color: #f0f0f0; color: #333;")>RA</div>
             RA Engine
         </a>
         <div class="nav-pill">Engine ready</div>
-        <a class="nav-back" href="/">← Home</a>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+            <button class="btn-theme" @onclick="ToggleTheme" title="Toggle theme">
+                @if (_isDark)
+                {
+                    <!-- Sun icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+                        <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
+                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+                    </svg>
+                }
+                else
+                {
+                    <!-- Moon icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                }
+            </button>
+            <a class="nav-back" href="/">← Home</a>
+        </div>
     </nav>
 
     <div class="compiler-layout">
@@ -90,7 +113,8 @@
                 <div class="input-footer">
                     <button class="btn-primary"
                             @onclick="Transpile"
-                            disabled="@(_loading || string.IsNullOrWhiteSpace(_input))">
+                            disabled="@(_loading || string.IsNullOrWhiteSpace(_input))"
+                            style=@(_isDark ? "background-color: #555; color: #fff;" : "background-color: #ddd; color: #333;")>
                         @if (_loading)
                         {
                             <span class="spinner"></span>
@@ -101,7 +125,7 @@
                             <span>Run</span>
                         }
                     </button>
-                    <button class="btn-ghost" @onclick="async () => Clear()">Clear</button>
+                    <button class="btn-ghost" @onclick="async () =>  await Clear()">Clear</button>
                     <span class="input-hint">Ctrl + Enter to run</span>
                 </div>
             </div>
@@ -162,14 +186,57 @@
 </div>
 
 
+
 @code {
     string _input = "";
     int     _inputKey = 0;  
-
+    bool _isDark;
     bool _loading;
     List<Result> _results = [];
     List<string> _history = [];
 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var saved = await JS.InvokeAsync<string>("getTheme");
+        _isDark = saved == "dark";
+        if(firstRender){
+            var resultBefore = _results;
+            await LoadResults();
+            StateHasChanged();
+            var resultAfter = _results;
+
+        }
+    } 
+
+    private async Task LoadResults()
+    {
+        var itemResult = await JS.InvokeAsync<string>("getResults",
+            "query_results");
+        if (!string.IsNullOrEmpty(itemResult))
+        {
+            _results = JsonSerializer.Deserialize<List<Result>>(itemResult)!;
+
+            _history = _results.Select(r => r.Ra).Distinct().ToList();
+             if (_history.Count > 30) _history = _history.TakeLast(30).ToList();
+        }
+    }
+    private async Task AddNewResult()
+    {
+        await JS.InvokeVoidAsync("storeResult",
+                                "query_results",
+                                JsonSerializer.Serialize(_results));
+    }
+    private async Task ClearResults()
+    {
+        await JS.InvokeVoidAsync("clearResults",
+                                "query_results");
+    }
+    async Task ToggleTheme()
+   {
+       _isDark = !_isDark;
+       await JS.InvokeVoidAsync("setTheme", _isDark ? "dark" : "light");
+   }
     readonly Op[] _ops = Tools.Ops;
     readonly string[] _cmp = ["=", "≠", "<", ">", "≤", "≥"];
     readonly Snippet[] _snippets = Tools.Snippets;
@@ -182,12 +249,12 @@
         _input = code;
         _inputKey++;
     }
-    void  Clear()
+    async Task  Clear()
     {
         _input = "";
         _inputKey++;
         _results.Clear();
-       
+        await ClearResults();
     }
 
     async Task HandleKey(KeyboardEventArgs e)
@@ -211,13 +278,17 @@
             sw.Stop();
             _results.Add(new Result(ra, sql, false, DateTime.Now,
              sw.ElapsedMilliseconds.ToString("F2") + " ms"));
+
+             
         }
         catch (Exception ex)
         {
             _results.Add(new Result(ra, ex.Message, true, DateTime.Now,null));
+
         }
         finally
         {
+            await AddNewResult();
             _loading = false;
             if (!_history.Contains(ra)) _history.Add(ra);
             if (_history.Count > 30) _history.RemoveAt(0);
