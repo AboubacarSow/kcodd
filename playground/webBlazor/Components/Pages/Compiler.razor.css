@@ -1,0 +1,21 @@
+.nav-brand-logo-img {
+    width: 24px;
+    height: 24px;
+}
+.nav-brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    min-width: 2rem;
+    min-height: 2rem;
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-size: 1.25rem;
+    background-color: inherit;
+}

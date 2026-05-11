@@ -82,20 +82,7 @@ html, body {
     text-align: center;
 }
 
-.home-logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 52px; height: 52px;
-    background: var(--text);
-    border-radius: var(--radius);
-    margin-bottom: 1.75rem;
-    color: white;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-}
+
 
 .home-title {
     font-size: 2.25rem;

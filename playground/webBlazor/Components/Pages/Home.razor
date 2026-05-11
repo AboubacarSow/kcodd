@@ -2,7 +2,7 @@
 @inject IJSRuntime JS
 @rendermode InteractiveServer
 
-<PageTitle>RA Engine — Relational Algebra Transpiler</PageTitle>
+<PageTitle>KCodd — Relational Algebra Transpiler</PageTitle>
 
 <div class="home">
 
@@ -26,7 +26,9 @@
 
     <div class="home-inner">
 
-        <div class="home-logo" style=@(_isDark ? "background-color: #333; color: #fff;" : "background-color: #f0f0f0; color: #333;")>RA</div>
+        <div class="home-logo" style=@(_isDark ? "background-color: #333; color: #fff;" : "background-color: #f0f0f0; color: #333;")>
+            <img src=@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg") alt="KCODD logo" class="home-logo-img" />
+        </div>
 
         <h1 class="home-title">Relational Algebra<br/>to SQL</h1>
         <p class="home-sub">
@@ -58,11 +60,7 @@
         var saved = await JS.InvokeAsync<string>("getTheme");
         _isDark = saved == "dark";
     }  
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     var saved = await JS.InvokeAsync<string>("getTheme");
-    //     _isDark = saved == "dark";
-    // }
+
 
     async Task ToggleTheme()
     {
