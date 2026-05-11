@@ -35,7 +35,6 @@
    - 6.2 Chained Projections
    - 6.3 Multi-join Chains
    - 6.4 Full Pipeline
-7. [SQL Playground Reference](#7-sql-playground-reference)
 
 ---
 
@@ -63,62 +62,10 @@
 | ∨ | OR | Logical or |
 | ¬ | NOT | Logical negation |
 
----
 
-## Sample Schema
-
-All examples use the following schema so SQL is always runnable:
-
-```sql
--- Students
-CREATE TABLE Student (
-    id      INTEGER PRIMARY KEY,
-    name    TEXT,
-    age     INTEGER,
-    dept_id INTEGER,
-    gpa     REAL
-);
-
--- Departments
-CREATE TABLE Department (
-    id   INTEGER PRIMARY KEY,
-    name TEXT,
-    budget INTEGER
-);
-
--- Courses
-CREATE TABLE Course (
-    id    INTEGER PRIMARY KEY,
-    title TEXT,
-    credits INTEGER
-);
-
--- Enrollments
-CREATE TABLE Enrolled (
-    student_id INTEGER,
-    course_id  INTEGER,
-    grade      TEXT
-);
-
--- Professors
-CREATE TABLE Professor (
-    id      INTEGER PRIMARY KEY,
-    name    TEXT,
-    dept_id INTEGER
-);
-
--- Teaching assignments
-CREATE TABLE Teaches (
-    prof_id   INTEGER,
-    course_id INTEGER
-);
-```
-
----
 
 ## 1. Core Operators (Currently Supported)
 
----
 
 ### 1.1 Selection σ  ✅
 
@@ -959,83 +906,6 @@ WHERE S.gpa > D.avg_gpa;
 
 ---
 
-## 7. SQL Playground Reference
-
-Quick-copy SQL blocks for interactive testing, independent of RA expressions.
-
-### Setup script
-
-```sql
--- Run this once to populate all tables
-
-INSERT INTO Department VALUES (1, 'Computer Science', 500000);
-INSERT INTO Department VALUES (2, 'Mathematics', 300000);
-INSERT INTO Department VALUES (3, 'Physics', 400000);
-
-INSERT INTO Student VALUES (1, 'Alice',  20, 1, 3.8);
-INSERT INTO Student VALUES (2, 'Bob',    22, 1, 3.2);
-INSERT INTO Student VALUES (3, 'Carol',  19, 2, 3.9);
-INSERT INTO Student VALUES (4, 'Dave',   21, 2, 2.8);
-INSERT INTO Student VALUES (5, 'Eve',    23, 3, 3.5);
-INSERT INTO Student VALUES (6, 'Frank',  18, 1, 2.5);
-
-INSERT INTO Course VALUES (1, 'Databases',      3);
-INSERT INTO Course VALUES (2, 'Algorithms',     3);
-INSERT INTO Course VALUES (3, 'Linear Algebra', 4);
-INSERT INTO Course VALUES (4, 'Mechanics',      4);
-
-INSERT INTO Enrolled VALUES (1, 1, 'A');
-INSERT INTO Enrolled VALUES (1, 2, 'B');
-INSERT INTO Enrolled VALUES (2, 1, 'B');
-INSERT INTO Enrolled VALUES (3, 3, 'A');
-INSERT INTO Enrolled VALUES (4, 3, 'C');
-INSERT INTO Enrolled VALUES (5, 4, 'A');
-INSERT INTO Enrolled VALUES (5, 1, 'A');
-INSERT INTO Enrolled VALUES (6, 2, 'A');
-
-INSERT INTO Professor VALUES (1, 'Prof. Smith', 1);
-INSERT INTO Professor VALUES (2, 'Prof. Jones', 2);
-INSERT INTO Professor VALUES (3, 'Prof. Lee',   1);
-
-INSERT INTO Teaches VALUES (1, 1);
-INSERT INTO Teaches VALUES (1, 2);
-INSERT INTO Teaches VALUES (2, 3);
-INSERT INTO Teaches VALUES (3, 1);
-```
-
-### Verification queries
-
-```sql
--- All students with their department names
-SELECT S.name, D.name AS dept
-FROM Student S
-JOIN Department D ON S.dept_id = D.id;
-
--- Students enrolled in Databases
-SELECT S.name
-FROM Student S
-JOIN Enrolled E ON S.id = E.student_id
-JOIN Course   C ON E.course_id = C.id
-WHERE C.title = 'Databases';
-
--- Department GPA stats
-SELECT D.name, COUNT(*) AS n, ROUND(AVG(S.gpa),2) AS avg_gpa
-FROM Student S
-JOIN Department D ON S.dept_id = D.id
-GROUP BY D.name;
-
--- Students enrolled in every course (division)
-SELECT S.name
-FROM Student S
-WHERE NOT EXISTS (
-    SELECT id FROM Course
-    EXCEPT
-    SELECT course_id FROM Enrolled E
-    WHERE E.student_id = S.id
-);
-```
-
----
 
 ## Implementation Roadmap
 

@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "transpiler", "src\transpiler\transpiler.csproj", "{6B7D4109-0082-406B-AE2F-61BE4F1946D4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clients", "clients", "{9123F88B-E531-3118-42D7-ED8CEF4BD00E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "playground", "playground", "{9123F88B-E531-3118-42D7-ED8CEF4BD00E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "clients\cli\cli.csproj", "{EAB1F5B4-2DA1-4ECC-A0DD-25BE91BB85B6}"
 EndProject
