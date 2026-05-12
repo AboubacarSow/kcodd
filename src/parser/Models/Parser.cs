@@ -254,7 +254,7 @@ public class Parser
         if (_current.Type == TokenType.NOT)
         {
             Eat(TokenType.NOT);
-            var inner = ParseNegation();
+            var inner = ParseCondition();
 
             return new NotNode(inner);
         }

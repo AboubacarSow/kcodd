@@ -81,6 +81,21 @@ public class E2ETest
         );
     }
 
+    [Fact]
+    public void Negation_Expression_Should_Generate_Correct_Sql()
+    {
+        var input = "σ [¬ (dept_id = 1)] (Student)";
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
+        var ast = parser.Parse();
+        var sqlgenerator = new SqlGenerator();
+        var result = sqlgenerator.GenerateSql(ast);
+        Assert.Equal(
+            "SELECT * FROM Student WHERE NOT (dept_id = 1)",
+            Normalize(result)
+        );
+    }
+
     private string Normalize(string result)
     {
         return result

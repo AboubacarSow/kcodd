@@ -51,7 +51,7 @@ public class SqlGenerator
             ComparisonNode comparison => $"({GenerateComparisonSql(comparison)})",
             AndNode and => $"{GenerationConditionSql(and.Left)} AND {GenerationConditionSql(and.Right)}",
             OrNode or => $"{GenerationConditionSql(or.Left)} OR {GenerationConditionSql(or.Right)}",
-            NotNode not => $"(NOT {GenerationConditionSql(not.Inner)})",
+            NotNode not => $"NOT {GenerationConditionSql(not.Inner)}",
             _ => throw new Exception($"Unsupported condition type: {condition.GetType().Name}")
         };
     }
