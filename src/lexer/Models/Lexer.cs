@@ -11,7 +11,7 @@ public class Lexer
         
         _position = 0;
     }
-    private char [] _doubleCharOperator = ['>','<', '⨝'];
+    private readonly char [] _doubleCharOperator = ['>','<', '⨝'];
     public Token NextToken()
     {
         SkipWhitespace();
@@ -28,7 +28,6 @@ public class Lexer
                     return multiToken;
             
         }
-    
 
         if(SingleCharTokens.TryGetValue(current, out var type))
         {
@@ -41,10 +40,6 @@ public class Lexer
 
         if (char.IsDigit(current))
             return ScanNumber();
-        //why checking this ?
-        //
-        if(current =='\'')
-            return ScanString();
         //check the end of the _input 
         if(_position >= _input.Length)
             return new Token(TokenType.EOF, "");
@@ -155,6 +150,9 @@ public class Lexer
         ['σ'] = TokenType.SELECT,
         ['⨝'] = TokenType.JOIN,
         ['ρ'] = TokenType.RENAME,
+        ['∪'] = TokenType.UNION,
+        ['∩'] = TokenType.INTERSECT,
+        ['-'] = TokenType.DIFFERENCE,
 
         ['¬'] = TokenType.NOT,
         ['>'] = TokenType.GT,
@@ -176,6 +174,9 @@ public class Lexer
 
         ["AND"] = TokenType.AND,
         ["OR"] = TokenType.OR,
-        ["NOT"] = TokenType.NOT
+        ["NOT"] = TokenType.NOT,
+        ["UNION"] = TokenType.UNION,
+        ["INTERSECT"] = TokenType.INTERSECT,
+        ["DIFFERENCE"] = TokenType.DIFFERENCE
     };
 }

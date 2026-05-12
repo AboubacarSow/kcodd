@@ -17,11 +17,13 @@ selection ::= ("σ" | "SELECT")
               "[" condition "]"
               "(" expression ")"
 
-
-
 natural-join ::= expression ("⋈" | "JOIN") expression  
 
-theta-join ::= expression  ("⋈" | "JOIN") "[" condition "]" expression  
+theta-join ::= expression  ("⋈" | "JOIN") "[" condition "]" expression 
+
+union ::= expression ("∪" | "UNION") expression
+intersection ::= expression ("∩" | "INTERSECT") expression
+difference ::= expression ("−" | "DIFFERENCE") expression
 
 
 

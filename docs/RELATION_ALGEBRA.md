@@ -385,7 +385,7 @@ Joins on an arbitrary condition. Generalises natural join.
 
 **Syntax**
 ```
-R ⋈[condition] S
+R ⋈θ[condition] S
 ```
 
 ---

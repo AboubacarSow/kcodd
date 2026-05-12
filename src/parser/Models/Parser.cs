@@ -30,7 +30,9 @@ public class Parser
         return _current.Type switch
         {
             TokenType.JOIN => true,
-            TokenType.DIFF =>true,
+            TokenType.DIFFERENCE =>true,
+            TokenType.UNION => true,
+            TokenType.INTERSECT => true,
             TokenType.THETA_JOIN => true,
             _ => false
         };
@@ -65,7 +67,9 @@ public class Parser
         {
             TokenType.JOIN => new JoinNode(left,right),
             TokenType.THETA_JOIN => new ThetaJoinNode(left,right,condition),
-            TokenType.DIFF => new DifferenceNode(left,right),
+            TokenType.DIFFERENCE => new DifferenceNode(left,right),
+            TokenType.UNION => new UnionNode(left,right),
+            TokenType.INTERSECT => new IntersectionNode(left,right),
             _ => throw new Exception($"Unexpected token type: {type.ToString()}")
         };
     }
@@ -231,8 +235,6 @@ public class Parser
         return left;
     }
 
-
-
     private ConditionNode ParseConjunction()
     {
         var left = ParseNegation();
@@ -247,9 +249,6 @@ public class Parser
 
         return left;
     }
-
-
-
     private ConditionNode ParseNegation()
     {
         if (_current.Type == TokenType.NOT)

@@ -8,7 +8,10 @@ public enum TokenType
 
     //Inner Operator  
     JOIN,     
-    DIFF, 
+    DIFFERENCE, 
+
+    UNION,
+    INTERSECT,
 
     // Logical Operators
     AND,         
