@@ -5,16 +5,14 @@ namespace cli;
 class Program
 {
     // ── Palette ────────────────────────────────────────────────────────────────
-    static readonly ConsoleColor AccentPrimary   = ConsoleColor.Cyan;
-    static readonly ConsoleColor AccentSecondary = ConsoleColor.DarkCyan;
-    static readonly ConsoleColor TextDim         = ConsoleColor.DarkGray;
-    static readonly ConsoleColor TextBright      = ConsoleColor.White;
-    static readonly ConsoleColor SuccessColor    = ConsoleColor.Green;
-    static readonly ConsoleColor ErrorColor      = ConsoleColor.Red;
-    static readonly ConsoleColor SqlColor        = ConsoleColor.Yellow;
-    static readonly ConsoleColor PromptColor     = ConsoleColor.Cyan;
+    static readonly ConsoleColor Dim     = ConsoleColor.DarkGray;
+    static readonly ConsoleColor Bright  = ConsoleColor.White;
+    static readonly ConsoleColor Muted   = ConsoleColor.Gray;
+    static readonly ConsoleColor Error   = ConsoleColor.Red;
+    static readonly ConsoleColor Sql     = ConsoleColor.Green;
+    static readonly ConsoleColor Prompt  = ConsoleColor.DarkYellow;
 
-    static int ConsoleWidth => Math.Min(Console.WindowWidth > 0 ? Console.WindowWidth : 120, 80);
+    static int W => Math.Min(Console.WindowWidth > 0 ? Console.WindowWidth : 120, 82);
 
     // ── Entry point ────────────────────────────────────────────────────────────
     static void Main(string[] args)
@@ -33,41 +31,31 @@ class Program
         while (true)
         {
             Console.WriteLine();
-            WriteColored("  ┌─ ", TextDim);
-            WriteColored("RA", AccentPrimary);
-            WriteColored(" ─────────────────────────────────────", TextDim);
-            Console.WriteLine();
+            Write("  ", Dim);
+            Write("›  ", Prompt);
 
-            WriteColored("  │ ", TextDim);
-            WriteColored("› ", PromptColor);
-
-            Console.ForegroundColor = TextBright;
+            Console.ForegroundColor = Bright;
             string? input = Console.ReadLine();
             Console.ResetColor();
-
-            WriteColored("  └", TextDim);
-            WriteColored("─────────────────────────────────────────", TextDim);
-            Console.ResetColor();
-            Console.WriteLine();
 
             if (string.IsNullOrWhiteSpace(input))
                 continue;
 
             string cmd = input.Trim().ToLower();
 
-            if (cmd == "exit" || cmd == "quit" || cmd == ":q")
+            if (cmd is "exit" or "quit" or ":q")
             {
                 PrintGoodbye();
                 break;
             }
 
-            if (cmd == "help" || cmd == ":h")
+            if (cmd is "help" or ":h")
             {
                 PrintHelp();
                 continue;
             }
 
-            if (cmd == "clear" || cmd == "cls")
+            if (cmd is "clear" or "cls")
             {
                 Console.Clear();
                 PrintBanner();
@@ -90,45 +78,54 @@ class Program
     // ── Banner ─────────────────────────────────────────────────────────────────
     static void PrintBanner()
     {
-        int w = ConsoleWidth;
-        string top    = "╔" + new string('═', w - 2) + "╗";
-        string bottom = "╚" + new string('═', w - 2) + "╝";
-        string blank  = "║" + new string(' ', w - 2) + "║";
-
-        string title    = "RELATIONAL  ALGEBRA  ENGINE";
-        string subtitle = "RA  →  SQL  Transpiler";
-
-        Console.WriteLine();
-        WriteLineColored(top, AccentPrimary);
-        WriteLineColored(blank, AccentPrimary);
-
-        // Title line
-        WriteColored("║", AccentPrimary);
-        int pad = (w - 2 - title.Length) / 2;
-        WriteColored(new string(' ', pad), ConsoleColor.Black);
-        WriteColored(title, TextBright);
-        WriteColored(new string(' ', w - 2 - pad - title.Length), ConsoleColor.Black);
-        WriteLineColored("║", AccentPrimary);
-
-        // Subtitle line
-        WriteColored("║", AccentPrimary);
-        int pad2 = (w - 2 - subtitle.Length) / 2;
-        WriteColored(new string(' ', pad2), ConsoleColor.Black);
-        WriteColored(subtitle, AccentSecondary);
-        WriteColored(new string(' ', w - 2 - pad2 - subtitle.Length), ConsoleColor.Black);
-        WriteLineColored("║", AccentPrimary);
-
-        WriteLineColored(blank, AccentPrimary);
-        WriteLineColored(bottom, AccentPrimary);
         Console.WriteLine();
 
-        // Operator chips
-        WriteColored("  Operators  ", TextDim);
-        string[] ops = ["π", "σ", "⋈", "ρ", "∧", "∨", "¬"];
+        // ASCII diamond mark — mirrors the KCodd lattice logo
+        //       ◆
+        //     ◇   ◇
+        //   ◇   ●   ◇
+        //     ◇   ◇
+        //       ◆
+        string[] diamond =
+        [
+            "          ◆          ",
+            "        ◇   ◇        ",
+            "      ◇   ●   ◇      ",
+            "        ◇   ◇        ",
+            "          ◆          ",
+        ];
+
+        foreach (var line in diamond)
+        {
+            Write("  ", Dim);
+            WriteLine(line, Dim);
+        }
+
+        Console.WriteLine();
+
+        // Wordmark
+        int pad = (W - 5) / 2;
+        Write(new string(' ', pad), Dim);
+        WriteLine("KCodd", Bright);
+
+        // Tagline
+        string tag = "Kern · Codd · RA → SQL";
+        int tagPad = (W - tag.Length) / 2;
+        Write(new string(' ', tagPad), Dim);
+        WriteLine(tag, Dim);
+
+        Console.WriteLine();
+        Write("  " + new string('─', W - 4), Dim);
+        Console.WriteLine();
+        Console.WriteLine();
+
+        // Operator strip
+        Write("  operators  ", Dim);
+        string[] ops = ["σ", "π", "ρ", "⨝", "⨝θ", "∧", "∨", "¬", "∪", "∩", "-"];
         foreach (var op in ops)
         {
-            WriteColored(" ", TextDim);
-            WriteColored(op, AccentPrimary);
+            Write(" ", Dim);
+            Write(op, Muted);
         }
         Console.WriteLine();
     }
@@ -137,101 +134,105 @@ class Program
     static void PrintHelp()
     {
         Console.WriteLine();
-        PrintPanel("COMMANDS", [
-            ("help  / :h",  "Show this help"),
-            ("clear / cls", "Clear the screen"),
-            ("exit  / :q",  "Quit the program"),
+        PrintPanel("commands", [
+            ("help  / :h",  "show this help"),
+            ("clear / cls", "clear the screen"),
+            ("exit  / :q",  "quit"),
         ]);
         Console.WriteLine();
-        PrintPanel("EXAMPLE", [
-            ("π name,age (σ age>18 (Student))", "Project & select"),
-            ("Student ⋈ Enrolled",              "Natural join"),
-            ("ρ S/Student (Student)",            "Rename relation"),
+        PrintPanel("examples", [
+            ("σ [age > 18] (Student)",                            "selection"),
+            ("π [name, gpa] (Student)",                           "projection"),
+            ("σ [age > 18 ∧ gpa >= 3] (Student)",                 "compound condition"),
+            ("Student ⨝ Enrolled",                                "natural join"),
+            ("Student ⨝θ [Student.id = Enrolled.sid] (Enrolled)", "theta join"),
+            ("ρ S (Student)",                                     "rename"),
         ]);
     }
 
     static void PrintPanel(string heading, (string key, string val)[] rows)
     {
-        int w = ConsoleWidth - 4;
-        WriteColored("  ╭─ ", TextDim);
-        WriteColored(heading, AccentPrimary);
-        WriteColored(" " + new string('─', Math.Max(0, w - heading.Length - 3)) + "╮", TextDim);
+        int w = W - 4;
+
+        Write("  ", Dim);
+        Write(heading, Muted);
+        WriteLine("  " + new string('·', Math.Max(0, w - heading.Length - 2)), Dim);
         Console.WriteLine();
 
         foreach (var (k, v) in rows)
         {
-            WriteColored("  │  ", TextDim);
-            WriteColored($"{k,-30}", SuccessColor);
-            WriteColored(v, TextDim);
-            Console.WriteLine();
+            Write("    ", Dim);
+            Write($"{k,-46}", Muted);
+            WriteLine(v, Dim);
         }
 
-        WriteColored("  ╰" + new string('─', w) + "╯", TextDim);
+        Console.WriteLine();
+        Write("  " + new string('─', w), Dim);
         Console.WriteLine();
     }
 
     // ── Success output ─────────────────────────────────────────────────────────
     static void PrintSuccess(string ra, string sql)
     {
-        int w = ConsoleWidth - 4;
+        int w = W - 4;
+
+        Console.WriteLine();
 
         // Input echo
+        Write("  in   ", Dim);
+        WriteLine(ra, Prompt);
+
+        // Divider + arrow
         Console.WriteLine();
-        WriteColored("  ┌─ ", TextDim);
-        WriteColored("INPUT", TextDim);
-        WriteColored(" " + new string('─', Math.Max(0, w - 7)) + "┐", TextDim);
+        Write("  " + new string('·', w), Dim);
+        Console.WriteLine();
+        Write("  ↓  transpiled", Dim);
+        Console.WriteLine();
+        Write("  " + new string('·', w), Dim);
+        Console.WriteLine();
         Console.WriteLine();
 
-        WriteColored("  │  ", TextDim);
-        WriteColored(ra, ConsoleColor.White);
-        Console.WriteLine();
-
-        WriteColored("  └" + new string('─', w) + "┘", TextDim);
-        Console.WriteLine();
-
-        // Arrow
-        WriteColored("     ↓  transpiled", AccentSecondary);
-        Console.WriteLine();
-
-        // SQL output
-        WriteColored("  ┌─ ", AccentPrimary);
-        WriteColored("SQL RAW", AccentPrimary);
-        WriteColored(" " + new string('─', Math.Max(0, w - 5)) + "┐", AccentPrimary);
-        Console.WriteLine();
-
-        // Word-wrap SQL inside the box
-        var lines = WrapText(sql, w - 4);
-        foreach (var line in lines)
+        // SQL output (multi-line wrapped, aligned)
+        Write("  out  ", Dim);
+        var lines = WrapText(sql, w - 7);
+        for (int i = 0; i < lines.Count; i++)
         {
-            WriteColored("  │  ", AccentPrimary);
-            WriteColored(line, SqlColor);
-            Console.WriteLine();
+            if (i == 0)
+                WriteLine(lines[i], Sql);
+            else
+            {
+                Write("       ", Dim);
+                WriteLine(lines[i], Sql);
+            }
         }
 
-        WriteColored("  └" + new string('─', w) + "┘", AccentPrimary);
+        Console.WriteLine();
+        Write("  " + new string('─', w), Dim);
         Console.WriteLine();
     }
 
     // ── Error output ───────────────────────────────────────────────────────────
     static void PrintError(string message)
     {
-        int w = ConsoleWidth - 4;
-        Console.WriteLine();
+        int w = W - 4;
 
-        WriteColored("  ┌─ ", ErrorColor);
-        WriteColored("ERROR", ErrorColor);
-        WriteColored(" " + new string('─', Math.Max(0, w - 7)) + "┐", ErrorColor);
         Console.WriteLine();
+        Write("  error  ", Error);
 
-        var lines = WrapText(message, w - 4);
-        foreach (var line in lines)
+        var lines = WrapText(message, w - 9);
+        for (int i = 0; i < lines.Count; i++)
         {
-            WriteColored("  │  ", ErrorColor);
-            WriteColored(line, ConsoleColor.White);
-            Console.WriteLine();
+            if (i == 0)
+                WriteLine(lines[i], Muted);
+            else
+            {
+                Write("         ", Dim);
+                WriteLine(lines[i], Muted);
+            }
         }
 
-        WriteColored("  └" + new string('─', w) + "┘", ErrorColor);
+        Console.WriteLine();
+        Write("  " + new string('─', w), Dim);
         Console.WriteLine();
     }
 
@@ -239,24 +240,30 @@ class Program
     static void PrintGoodbye()
     {
         Console.WriteLine();
-        WriteLineColored("  ─────────────────────────────────────────────────────────────", TextDim);
-        WriteColored("  ", TextDim);
-        WriteColored("\t\tGoodbye.", AccentSecondary);
-        WriteColored("  Session ended.", TextDim);
+        Write("  " + new string('─', W - 4), Dim);
         Console.WriteLine();
-        WriteLineColored("  ─────────────────────────────────────────────────────────────", TextDim);
+        Console.WriteLine();
+
+        string msg = "goodbye.";
+        int pad = (W - msg.Length) / 2;
+        Write(new string(' ', pad), Dim);
+        WriteLine(msg, Dim);
+
+        Console.WriteLine();
+        Write("  " + new string('─', W - 4), Dim);
+        Console.WriteLine();
         Console.WriteLine();
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
-    static void WriteColored(string text, ConsoleColor color)
+    static void Write(string text, ConsoleColor color)
     {
         Console.ForegroundColor = color;
         Console.Write(text);
         Console.ResetColor();
     }
 
-    static void WriteLineColored(string text, ConsoleColor color)
+    static void WriteLine(string text, ConsoleColor color)
     {
         Console.ForegroundColor = color;
         Console.WriteLine(text);
@@ -275,6 +282,7 @@ class Program
             result.Add(text[..cut].TrimEnd());
             text = text[cut..].TrimStart();
         }
+
         if (text.Length > 0) result.Add(text);
         return result;
     }

@@ -1,7 +1,11 @@
 expression ::= projection
              | selection
-             | join
+             | natural-join
+             | theta-join
              | rename
+             | union
+             | intersection
+             | difference
              | relation
              | "(" expression ")"
 
@@ -19,7 +23,7 @@ selection ::= ("σ" | "SELECT")
 
 natural-join ::= expression ("⋈" | "JOIN") expression  
 
-theta-join ::= expression  ("⋈" | "JOIN") "[" condition "]" expression 
+theta-join ::= expression  "⋈θ" "[" condition "]" expression 
 
 union ::= expression ("∪" | "UNION") expression
 intersection ::= expression ("∩" | "INTERSECT") expression

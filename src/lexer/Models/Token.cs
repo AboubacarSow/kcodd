@@ -8,6 +8,14 @@ public class Token
     public Token(TokenType type, string value)
     {
         Type = type;
-        Value = value;
+        Value = setValue(value);
+    }
+
+    private string setValue(string value)
+    {
+        if(Type==TokenType.NEQ){
+            return  "<>";
+        }
+        return value;
     }
 }

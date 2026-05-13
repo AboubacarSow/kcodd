@@ -5,8 +5,9 @@
 <PageTitle>KCodd — Relational Algebra Transpiler</PageTitle>
 
 <div class="home">
-
-    <button class="btn-theme home-theme-btn" @onclick="ToggleTheme" title="Toggle theme">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <img src=@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg") alt="KCodd Logo" style="height: 40px; width: auto;" />
+        <button class="btn-theme home-theme-btn" @onclick="ToggleTheme" title="Toggle theme">
         @if (_isDark)
         {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -22,13 +23,12 @@
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
             </svg>
         }
-    </button>
+        </button>
+    </div>
 
     <div class="home-inner">
 
-        <div class="home-logo" style=@(_isDark ? "background-color: #333; color: #fff;" : "background-color: #f0f0f0; color: #333;")>
-            <img src=@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg") alt="KCODD logo" class="home-logo-img" />
-        </div>
+        
 
         <h1 class="home-title">Relational Algebra<br/>to SQL</h1>
         <p class="home-sub">
@@ -59,8 +59,7 @@
     {
         var saved = await JS.InvokeAsync<string>("getTheme");
         _isDark = saved == "dark";
-    }  
-
+    }
 
     async Task ToggleTheme()
     {
@@ -68,7 +67,5 @@
         await JS.InvokeVoidAsync("setTheme", _isDark ? "dark" : "light");
     }
 
-
     readonly Op[] _ops = Tools.Ops;
-    
 }
