@@ -9,7 +9,8 @@ class Program
     static readonly ConsoleColor Bright  = ConsoleColor.White;
     static readonly ConsoleColor Muted   = ConsoleColor.Gray;
     static readonly ConsoleColor Error   = ConsoleColor.Red;
-    static readonly ConsoleColor Sql     = ConsoleColor.Green;
+    static readonly ConsoleColor Sql     = ConsoleColor.DarkGray;
+    static readonly ConsoleColor Keyword = ConsoleColor.DarkGreen;
     static readonly ConsoleColor Prompt  = ConsoleColor.DarkYellow;
 
     static int W => Math.Min(Console.WindowWidth > 0 ? Console.WindowWidth : 120, 82);
@@ -198,11 +199,11 @@ class Program
         for (int i = 0; i < lines.Count; i++)
         {
             if (i == 0)
-                WriteLine(lines[i], Sql);
+                WriteSql(lines[i], Sql);
             else
             {
                 Write("       ", Dim);
-                WriteLine(lines[i], Sql);
+                WriteSql(lines[i], Sql);
             }
         }
 
@@ -269,6 +270,24 @@ class Program
         Console.WriteLine(text);
         Console.ResetColor();
     }
+    static void WriteSql(string text, ConsoleColor color)
+    {
+        var words = text.Split(' ');
+
+        Console.ForegroundColor = color;
+        foreach (var word in words)
+        {
+            
+            if (SetOfKeywords.Contains(word.ToUpper()))
+            {
+                Console.ResetColor();
+                Console.ForegroundColor = Keyword;
+            }
+            Console.Write($"{word} ");
+            Console.ResetColor();
+        }
+        Console.ResetColor();
+    }
 
     static List<string> WrapText(string text, int maxWidth)
     {
@@ -286,4 +305,12 @@ class Program
         if (text.Length > 0) result.Add(text);
         return result;
     }
+
+    static readonly List<string> SetOfKeywords =
+    [
+        "SELECT", "FROM", "WHERE", "AND", "OR", "NOT", "JOIN", "ON", "AS",
+        "INNER", "LEFT", "RIGHT", "FULL", "OUTER", "GROUP BY", "ORDER BY",
+        "HAVING", "DISTINCT", "UNION", "ALL", "EXCEPT", "INTERSECT",
+        "IN", "IS", "NULL", "LIKE", "BETWEEN"
+    ];
 }

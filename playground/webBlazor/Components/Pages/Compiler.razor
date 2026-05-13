@@ -9,21 +9,26 @@
 
 <PageTitle>Compiler — KCodd</PageTitle>
 
-<div class="compiler-page">
 
+<div class="compiler-page" @onclick="CloseAllDropdowns">
+
+    <!-- ── Nav ── -->
     <nav class="nav">
         <a class="nav-brand" href="/">
-            <div class="nav-brand-mark" style=@(_isDark ? "background-color: #333; color: #fff;" : "background-color: #f0f0f0; color: #333;")>
-                <img src=@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg") alt="KCodd logo" class="nav-brand-logo-img" />
+            <div class="nav-brand-mark">
+                <img src=@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg")
+                     alt="KCodd logo" class="nav-brand-logo-img" />
             </div>
+            KCodd
         </a>
-        <div class="nav-pill">Engine ready v1.0.0</div>
-        <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="nav-right">
+            <span class="nav-pill">Engine ready v1.0.0</span>
             <button class="btn-theme" @onclick="ToggleTheme" title="Toggle theme">
                 @if (_isDark)
                 {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
                         <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
                         <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
                         <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
@@ -40,172 +45,262 @@
         </div>
     </nav>
 
-    <div class="compiler-layout">
+    <!-- ── Fixed editor zone ── -->
+    <div class="editor-fixed">
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
+        <!-- Toolbar -->
+        <div class="toolbar">
 
-            <!-- Relational operators -->
-            <div>
-                <span class="sidebar-label">Operators</span>
-                <div class="op-grid">
-                    @foreach (var op in _ops)
-                    {
-                        <button class="op-key"
-                                title="@op.Name"
-                                @onclick="() => Insert(op.Insert)">
-                            <span class="k-sym">@op.Sym</span>
-                            <span class="k-name">@op.Name</span>
-                        </button>
-                    }
-                </div>
-            </div>
-
-            <!-- Comparison operators -->
-            <div>
-                <span class="sidebar-label">Comparison</span>
-                <div class="cmp-row">
-                    @foreach (var c in _cmp)
-                    {
-                        <button class="cmp-key" @onclick="() => Insert(c)">@c</button>
-                    }
-                </div>
-            </div>
-
-            <!-- Snippets -->
-            <div>
-                <span class="sidebar-label">Snippets</span>
-                @foreach (var s in _snippets)
-                {
-                    <div class="snippet" @onclick="() => UseSnippet(s.Code)">
-                        <div class="snippet-code">@s.Code</div>
-                        <div class="snippet-desc">@s.Desc</div>
-                    </div>
-                }
-            </div>
-
-            <!-- History -->
-            @if (_history.Count > 0)
+            <!-- Operator group dropdowns -->
+            @foreach (var (group, gi) in _opGroups.Select((g, i) => (g, i)))
             {
-                <div>
-                    <span class="sidebar-label">History</span>
-                    @foreach (var h in ((IEnumerable<string>)_history).Reverse().Take(8))
+                <div class="tb-dropdown" @onclick:stopPropagation>
+                    <button class="tb-trigger @(_openGroup == gi ? "active" : "")"
+                            @onclick="() => ToggleGroup(gi)">
+                        @group.Label
+                        <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M2 4l4 4 4-4"/>
+                        </svg>
+                    </button>
+                    @if (_openGroup == gi)
                     {
-                        <div class="history-item" title="@h" @onclick="() => UseSnippet(h)">
-                            @h
+                        <div class="tb-menu">
+                            @foreach (var op in group.Ops)
+                            {
+                                <button class="tb-menu-item" @onclick="() => InsertAndClose(op.Insert)">
+                                    <span class="menu-sym">@op.Sym</span>
+                                    <span class="menu-name">@op.Name</span>
+                                </button>
+                            }
                         </div>
                     }
                 </div>
             }
-        </aside>
 
-        <!-- Main -->
-        <main class="main-panel">
+            <!-- Comparison operators (inline — they're short) -->
+            <div class="tb-sep"></div>
+            <div class="tb-group">
+                <span class="tb-label">cmp</span>
+                @foreach (var c in _cmp)
+                {
+                    <button class="cmp-key" @onclick="() => Insert(c)">@c</button>
+                }
+            </div>
 
-            <div class="input-area">
-                <label for="raInput">Expression</label>
-                <textarea id="raInput"
-                          class="ra-input"
-                          placeholder="σ [age > 18] (Student)"
-                          @bind="_input"
-                          @bind:event="oninput"
-                          @onkeydown="HandleKey"
-                          @key="_inputKey"
-                          rows="3"></textarea>
-                <div class="input-footer">
-                    <button class="btn-primary"
-                            @onclick="Transpile"
-                            disabled="@(_loading || string.IsNullOrWhiteSpace(_input))"
-                            style=@(_isDark ? "background-color: #555; color: #fff;" : "background-color: #ddd; color: #333;")>
-                        @if (_loading)
+            <!-- Parens (inline) -->
+            <div class="tb-sep"></div>
+            <div class="tb-group">
+                <button class="cmp-key" @onclick='() => Insert("(")' title="Open paren">(</button>
+                <button class="cmp-key" @onclick='() => Insert(")")' title="Close paren">)</button>
+                <button class="cmp-key" @onclick='() => Insert("[")' title="Open bracket">[</button>
+                <button class="cmp-key" @onclick='() => Insert("]")' title="Close bracket">]</button>
+            </div>
+
+            <!-- Snippets dropdown -->
+            <div class="tb-sep"></div>
+            <div class="tb-dropdown" @onclick:stopPropagation>
+                <button class="tb-trigger @(_openSnippets ? "active" : "")"
+                        @onclick="() => _openSnippets = !_openSnippets">
+                    Snippets
+                    <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M2 4l4 4 4-4"/>
+                    </svg>
+                </button>
+                @if (_openSnippets)
+                {
+                    <div class="tb-menu tb-menu-wide">
+                        @foreach (var s in _snippets)
                         {
-                            <span class="spinner"></span>
-                            <span>Running</span>
+                            <button class="tb-menu-item tb-menu-item-snippet"
+                                    @onclick="() => UseSnippetAndClose(s.Code)">
+                                <span class="menu-code">@s.Code</span>
+                                <span class="menu-desc">@s.Desc</span>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- History button -->
+            <div class="tb-group tb-group-end">
+                <button class="hist-key" @onclick="() => _showHistory = true" @onclick:stopPropagation>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    History
+                    @if (_history.Count > 0)
+                    {
+                        <span class="hist-count">@_history.Count</span>
+                    }
+                </button>
+            </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="input-area">
+            <label for="raInput" class="input-label">expression</label>
+            <textarea id="raInput"
+                      class="ra-input"
+                      placeholder="σ [age > 18 ∧ gpa >= 3] (Student)"
+                      @bind="_input"
+                      @bind:event="oninput"
+                      @onkeydown="HandleKey"
+                      @key="_inputKey"
+                      rows="2"></textarea>
+            <div class="input-footer">
+                <button class="btn-run"
+                        @onclick="Transpile"
+                        disabled="@(_loading || string.IsNullOrWhiteSpace(_input))">
+                    @if (_loading)
+                    {
+                        <span class="spinner"></span>
+                        <span>Running</span>
+                    }
+                    else
+                    {
+                        <span>Run</span>
+                    }
+                </button>
+                <button class="btn-ghost" @onclick="async () => await Clear()">Clear</button>
+                <span class="input-hint">Ctrl + Enter to run</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Scrollable output ── -->
+    <div class="output-area" id="outputPane">
+        @if (_results.Count == 0)
+        {
+            <div class="output-empty">
+                <p>Results will appear here.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var r in ((IEnumerable<Result>)_results).Reverse())
+            {
+                <div class="result">
+                    <div class="result-header">
+                        <span class="result-status @(r.IsError ? "err" : "ok")">
+                            @(r.IsError ? "Error" : "SQL generated")
+                        </span>
+                        <div class="result-meta-group">
+                            @if (r.Elapsed is not null)
+                            {
+                                <span class="result-elapsed">@r.Elapsed</span>
+                            }
+                            <span class="result-meta">@r.At.ToString("HH:mm:ss")</span>
+                        </div>
+                    </div>
+
+                    <div class="result-input-row">@r.Ra</div>
+
+                    <div class="result-body">
+                        @if (r.IsError)
+                        {
+                            <div class="result-error">@r.Sql</div>
                         }
                         else
                         {
-                            <span>Run</span>
-                        }
-                    </button>
-                    <button class="btn-ghost" @onclick="async () => await Clear()">Clear</button>
-                    <span class="input-hint">Ctrl + Enter to run</span>
-                </div>
-            </div>
-
-            <div class="output-area" id="outputPane">
-                @if (_results.Count == 0)
-                {
-                    <div class="output-empty">
-                        <p>Results will appear here.</p>
-                    </div>
-                }
-                else
-                {
-                    @foreach (var r in ((IEnumerable<Result>)_results).Reverse())
-                    {
-                        <div class="result">
-                            <div class="result-header">
-                                <span class="result-status @(r.IsError ? "err" : "ok")">
-                                    @(r.IsError ? "Error" : "SQL generated")
-                                </span>
-                                <div class="result-meta-group">
-                                    @if (r.Elapsed is not null)
+                            <div class="result-sql">
+                                @foreach (var token in Tokenize(r.Sql))
+                                {
+                                    if (token.IsKeyword)
                                     {
-                                        <span class="result-elapsed">@r.Elapsed</span>
+                                        <span class="sql-kw">@(token.Text + " ")</span>
                                     }
-                                    <span class="result-meta">@r.At.ToString("HH:mm:ss")</span>
-                                </div>
-                            </div>
-
-                            <div class="result-input-row">@r.Ra</div>
-
-                            <div class="result-body">
-                                @if (r.IsError)
-                                {
-                                    <div class="result-error">@r.Sql</div>
-                                }
-                                else
-                                {
-                                    <div class="result-sql">@r.Sql</div>
+                                    else
+                                    {
+                                        <span>@(token.Text + " ")</span>
+                                    }
                                 }
                             </div>
+                        }
+                    </div>
 
-                            @if (!r.IsError)
-                            {
-                                <div class="result-footer">
-                                    <button class="btn-copy @(r.Copied ? "copied" : "")"
-                                            @onclick="() => Copy(r)">
-                                        @(r.Copied ? "Copied" : "Copy SQL")
-                                    </button>
-                                </div>
-                            }
+                    @if (!r.IsError)
+                    {
+                        <div class="result-footer">
+                            <button class="btn-copy @(r.Copied ? "copied" : "")"
+                                    @onclick="() => Copy(r)">
+                                @(r.Copied ? "Copied" : "Copy SQL")
+                            </button>
                         </div>
                     }
-                }
-            </div>
-        </main>
+                </div>
+            }
+        }
     </div>
+
+    <!-- ── History modal ── -->
+    @if (_showHistory)
+    {
+        <div class="modal-backdrop" @onclick="() => _showHistory = false">
+            <div class="modal" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <span class="modal-title">History</span>
+                    <button class="modal-close" @onclick="() => _showHistory = false">✕</button>
+                </div>
+                <div class="modal-body">
+                    @if (_history.Count == 0)
+                    {
+                        <div class="modal-empty">No expressions yet.</div>
+                    }
+                    else
+                    {
+                        @foreach (var h in ((IEnumerable<string>)_history).Reverse())
+                        {
+                            <div class="history-row">
+                                <span class="history-code" title="@h">@h</span>
+                                <button class="history-use"
+                                        @onclick="() => { UseSnippet(h); _showHistory = false; }">
+                                    Use
+                                </button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
-    string  _input    = "";
-    int     _inputKey = 0;
+    string  _input      = "";
+    int     _inputKey   = 0;
     bool    _isDark;
     bool    _loading;
+    bool    _showHistory;
+    int?    _openGroup;       
+    bool    _openSnippets;    
+
     List<Result> _results = [];
     List<string> _history = [];
+
+    static readonly HashSet<string> _keywords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "SELECT","DISTINCT","FROM","WHERE","AND","OR","NOT",
+        "JOIN","NATURAL","ON","UNION","INTERSECT","EXCEPT",
+        "AS","ALL","LEFT","RIGHT","FULL","OUTER","INNER",
+        "GROUP","BY","HAVING","ORDER","ASC","DESC","LIMIT"
+    };
+
+
+    static IEnumerable<SqlToken> Tokenize(string sql)
+        => sql.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+              .Select(w => new SqlToken(w.TrimEnd(';', ','), _keywords.Contains(w.TrimEnd(';', ','))));
+
+    // ── Data ──────────────────────────────────────────────────────────────────
+    readonly OpGroup[]  _opGroups = Tools.OpGroups;
+    readonly string[]   _cmp      = ["=", "≠", "<", ">", "≤", "≥"];
+    readonly Snippet[]  _snippets  = Tools.Snippets;
 
     // ── Lifecycle ──────────────────────────────────────────────────────────────
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var saved = await JS.InvokeAsync<string>("getTheme");
         _isDark = saved == "dark";
-
-        if (firstRender)
-        {
-            await LoadResults();
-            StateHasChanged();
-        }
+        if (firstRender) { await LoadResults(); StateHasChanged(); }
     }
 
     // ── Persistence ────────────────────────────────────────────────────────────
@@ -220,7 +315,7 @@
         }
     }
 
-    async Task AddNewResult()
+    async Task SaveResults()
         => await JS.InvokeVoidAsync("storeResult", "query_results", JsonSerializer.Serialize(_results));
 
     async Task ClearResults()
@@ -233,31 +328,38 @@
         await JS.InvokeVoidAsync("setTheme", _isDark ? "dark" : "light");
     }
 
-    // ── Operator palette ───────────────────────────────────────────────────────
-    readonly Op[] _ops = Tools.Ops;
-
-    readonly string[] _cmp = ["=", "≠", "<", ">", "≤", "≥"];
-
-    readonly Snippet[] _snippets = Tools.Snippets;
-
-
-    // ── Actions ────────────────────────────────────────────────────────────────
-    void Insert(string text)
+    // ── Dropdown logic ─────────────────────────────────────────────────────────
+    void ToggleGroup(int i)
     {
-        _input = (_input ?? "") + text;
-        _inputKey++;
+        _openSnippets = false;
+        _openGroup = _openGroup == i ? null : i;
     }
 
-    void UseSnippet(string code)
+    void CloseAllDropdowns()
     {
-        _input = code;
-        _inputKey++;
+        _openGroup    = null;
+        _openSnippets = false;
+    }
+
+    // ── Editor actions ─────────────────────────────────────────────────────────
+    void Insert(string text) { _input = (_input ?? "") + text; _inputKey++; }
+    void UseSnippet(string code) { _input = code; _inputKey++; }
+
+    void InsertAndClose(string text)
+    {
+        Insert(text);
+        _openGroup = null;
+    }
+
+    void UseSnippetAndClose(string code)
+    {
+        UseSnippet(code);
+        _openSnippets = false;
     }
 
     async Task Clear()
     {
-        _input    = "";
-        _inputKey++;
+        _input = ""; _inputKey++;
         _results.Clear();
         await ClearResults();
     }
@@ -265,15 +367,13 @@
     async Task HandleKey(KeyboardEventArgs e)
     {
         if (e.Key == "Enter" && e.CtrlKey) await Transpile();
+        if (e.Key == "Escape") CloseAllDropdowns();
     }
 
     async Task Transpile()
     {
         if (string.IsNullOrWhiteSpace(_input)) return;
-
-        _loading = true;
-        StateHasChanged();
-        await Task.Delay(1);
+        _loading = true; StateHasChanged(); await Task.Delay(1);
 
         var ra = _input!.Trim();
         try
@@ -281,8 +381,7 @@
             var sw = Stopwatch.StartNew();
             string sql = Transpiler.Transpile(ra);
             sw.Stop();
-            _results.Add(new Result(ra, sql, false, DateTime.Now,
-                sw.ElapsedMilliseconds + " ms"));
+            _results.Add(new Result(ra, sql, false, DateTime.Now, sw.ElapsedMilliseconds + " ms"));
         }
         catch (Exception ex)
         {
@@ -290,7 +389,7 @@
         }
         finally
         {
-            await AddNewResult();
+            await SaveResults();
             _loading = false;
             if (!_history.Contains(ra)) _history.Add(ra);
             if (_history.Count > 30) _history.RemoveAt(0);
@@ -302,12 +401,8 @@
     async Task Copy(Result r)
     {
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", r.Sql);
-        r.Copied = true;
-        StateHasChanged();
+        r.Copied = true; StateHasChanged();
         await Task.Delay(1800);
-        r.Copied = false;
-        StateHasChanged();
+        r.Copied = false; StateHasChanged();
     }
-
-   
 }
