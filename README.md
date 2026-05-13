@@ -1,7 +1,7 @@
 # KCodd
 
 <p align="center">
-  <img src="assets/kcodd_logo.svg" width="180"/>
+  <img src="assets/kcodd_logo.svg" width="450"/>
 </p>
 
 <p align="center">
@@ -150,8 +150,10 @@ Student ⋈θ [Student.id = Enrolled.student_id] Enrolled
 ### CLI Preview
 
 <p align="center">
-<img src="/assets/cli-playground.png" width="150" alt="cli playground">
-<img src="/assets/cli-playground2.png" width="150" alt="cli playground">
+<img src="assets/cli-playground.png" alt="cli playground">
+</p>
+<p align="center">
+<img src="assets/cli-playground2.png" alt="cli playground">
 </p>
 
 ---
@@ -173,8 +175,10 @@ for the interactive Blazor playground.
 
 ### Web Preview
 <p align="center">
-<img src="/assets/web-playground.png" width="150" alt="Web playground">
-<img src="/assets/web-playground-1.png" width="150" alt="Web playground">
+<img src="assets/web-playground.png"  alt="Web playground">
+<br>
+<br>
+<img src="assets/web-playground-1.png" alt="Web playground">
 </p>
 
 ---
@@ -192,11 +196,11 @@ expression ::= projection
              | relation
              | "(" expression ")"
 
-projection ::= ("π" | "PROJECT")
+projection ::= "π" 
                "[" attribute_list "]"
                "(" expression ")"
 
-selection ::= ("σ" | "SELECT")
+selection ::= "σ"
               "[" condition "]"
               "(" expression ")"
 
@@ -206,7 +210,7 @@ theta-join ::= expression "⋈θ"
                "[" condition "]"
                expression
 
-rename ::= ("ρ" | "RENAME")
+rename ::= "ρ" 
            identifier
            "(" expression ")"
 
@@ -219,12 +223,12 @@ difference ::= expression "−" expression
 condition ::= disjunction
 
 disjunction ::= conjunction
-                (("∨" | "OR") conjunction)*
+                ("∨" conjunction)*
 
 conjunction ::= negation_expr
-                (("∧" | "AND") negation_expr)*
+                ("∧"  negation_expr)*
 
-negation_expr ::= ("¬" | "NOT") negation_expr
+negation_expr ::= "¬"  negation_expr
                 | comparison
                 | "(" condition ")"
 

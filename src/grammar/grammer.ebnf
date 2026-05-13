@@ -11,27 +11,27 @@ expression ::= projection
 
 
 
-projection ::= ("π" | "PROJECT")
+projection ::= "π" 
                "[" attribute_list "]"
                "(" expression ")"
 
 
 
-selection ::= ("σ" | "SELECT")
+selection ::= "σ"
               "[" condition "]"
               "(" expression ")"
 
-natural-join ::= expression ("⋈" | "JOIN") expression  
+natural-join ::= expression "⋈" expression  
 
 theta-join ::= expression  "⋈θ" "[" condition "]" expression 
 
-union ::= expression ("∪" | "UNION") expression
-intersection ::= expression ("∩" | "INTERSECT") expression
-difference ::= expression ("−" | "DIFFERENCE") expression
+union ::= expression "∪" expression
+intersection ::= expression "∩" expression
+difference ::= expression "−" expression
 
 
 
-rename ::= ("ρ" | "RENAME")
+rename ::= "ρ"
            identifier
            "(" expression ")"
 
@@ -50,7 +50,7 @@ conjunction ::= negation_expr (and_op negation_expr)*
 
 negation_expr ::= negation_expr_inner
 
-negation_expr_inner ::= ("¬" | "NOT") negation_expr_inner
+negation_expr_inner ::= "¬" negation_expr_inner
                       | comparison
                       | "(" condition ")"
 
@@ -62,11 +62,11 @@ operand ::= identifier | literal
 comparator ::= "=" | "≠" | "<" | ">" | "<=" | ">="
 
 
-and_op ::= "and" | "∧"
+and_op ::=  "∧"
 
-or_op  ::= "or"  | "∨"
+or_op  ::=  "∨"
 
-negation ::= "NOT" | "¬"
+negation ::= "¬"
 
 
 identifier ::= letter (letter | digit | "_")*
@@ -75,4 +75,3 @@ literal ::= number | string
 
 number ::= digit+
 
-string ::= "'" (any_char)* "'"

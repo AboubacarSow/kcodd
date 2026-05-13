@@ -9,8 +9,8 @@ public class Tools
         new("ρ",  "Rename",     "ρ "),
  
         // Joins
-        new("⋈",  "Nat. join",  " ⋈ "),
-        new("⋈θ", "Theta join", " ⋈θ "),
+        new("⨝",  "Nat. join",  " ⋈ "),
+        new("⨝θ", "Theta join", " ⋈θ "),
  
         // Set operations
         new("∪",  "Union",      " ∪ "),
@@ -32,8 +32,8 @@ public class Tools
         new("π [name, age] (Student)",                            "Projection"),
         new("σ [age > 18 ∧ gpa >= 3] (Student)",                  "AND condition"),
         new("σ [dept = 'CS' ∨ dept = 'Math'] (Student)",          "OR condition"),
-        new("Student ⋈ Enrolled",                                 "Natural join"),
-        new("Student ⋈θ [Student.id = Enrolled.sid] (Enrolled)",  "Theta join"),
+        new("Student ⨝ Enrolled",                                 "Natural join"),
+        new("Student ⨝θ [Student.id = Enrolled.sid] (Enrolled)",  "Theta join"),
         new("ρ S (Student)",                                      "Rename"),
         new("π [name] (Student) ∪ π [name] (Professor)",          "Union"),
         new("π [dept] (Student) ∩ π [dept] (Professor)",          "Intersection"),

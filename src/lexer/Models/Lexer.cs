@@ -54,14 +54,8 @@ public class Lexer
             _position++;
         }
     }
-    private static Token Classify(string word)
-    {
-        string upper = word.ToUpper();
-        if(Keywords.TryGetValue(upper, out var type))
-            return new Token(type,word);
+    private static Token Classify(string word) => new(TokenType.IDENTIFIER, word);
 
-        return new Token(TokenType.IDENTIFIER,word);
-    }
 
     private string ScanWord()
     {
@@ -92,27 +86,7 @@ public class Lexer
         return new Token(TokenType.NUMBER, value);
     }
 
-    private Token ScanString()
-    {
-        _position++; // skip opening '
-
-        int start = _position;
-
-        while (_position < _input.Length &&
-            _input[_position] != '\'')
-        {
-            _position++;
-        }
-
-        if (_position >= _input.Length)
-            throw new Exception("Unterminated string literal");
-
-        string value = _input[start.._position];
-
-        _position++; // skip closing '
-
-        return new Token(TokenType.STRING, value);
-    }
+   
     
     private Token? TryReadMultiCharOperator()
     {
@@ -152,7 +126,7 @@ public class Lexer
         ['ρ'] = TokenType.RENAME,
         ['∪'] = TokenType.UNION,
         ['∩'] = TokenType.INTERSECT,
-        ['-'] = TokenType.DIFFERENCE,
+        ['−'] = TokenType.DIFFERENCE,
 
         ['¬'] = TokenType.NOT,
         ['>'] = TokenType.GT,
@@ -161,22 +135,7 @@ public class Lexer
         ['≠'] = TokenType.NEQ,
         ['∧']  = TokenType.AND,
         ['∨'] = TokenType.OR,
-
-
     };
 
-    private static readonly Dictionary<string, TokenType> Keywords = new()
-    {
-        ["SELECT"] = TokenType.SELECT,
-        ["PROJECT"] = TokenType.PROJECT,
-        ["JOIN"] = TokenType.JOIN,
-        ["RENAME"] = TokenType.RENAME,
-
-        ["AND"] = TokenType.AND,
-        ["OR"] = TokenType.OR,
-        ["NOT"] = TokenType.NOT,
-        ["UNION"] = TokenType.UNION,
-        ["INTERSECT"] = TokenType.INTERSECT,
-        ["DIFFERENCE"] = TokenType.DIFFERENCE
-    };
+   
 }
