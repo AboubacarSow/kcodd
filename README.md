@@ -31,7 +31,8 @@ It parses relational algebra expressions, builds Abstract Syntax Trees (ASTs), a
 ## Current Status
 
 > Current version: `v1.0.0`
-> Active Developpement 
+
+> **In Active Developpement** 
 
 ### Supported Operators
 
