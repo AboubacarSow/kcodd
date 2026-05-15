@@ -381,11 +381,11 @@
             var sw = Stopwatch.StartNew();
             string sql = Transpiler.Transpile(ra);
             sw.Stop();
-            _results.Add(new Result(ra, sql, false, DateTime.Now, sw.ElapsedMilliseconds + " ms"));
+            _results.Add(new Result(ra, sql, false, DateTime.Now, sw.ElapsedMilliseconds + " ms",false));
         }
         catch (Exception ex)
         {
-            _results.Add(new Result(ra, ex.Message, true, DateTime.Now, null));
+            _results.Add(new Result(ra, ex.Message, true, DateTime.Now));
         }
         finally
         {

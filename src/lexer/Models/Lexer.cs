@@ -49,7 +49,8 @@ public class Lexer
     private void SkipWhitespace()
     {
         while (_position < _input.Length &&
-            char.IsWhiteSpace(_input[_position]))
+            (char.IsWhiteSpace(_input[_position]) || _input[_position] == '\''))
+            
         {
             _position++;
         }

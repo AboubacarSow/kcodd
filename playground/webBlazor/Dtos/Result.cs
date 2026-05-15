@@ -12,7 +12,7 @@ public class Result
 
 
     public Result() { }
-    public Result(string Ra,String Sql, bool IsError, DateTime At,bool Copied=false, string Elapsed="")
+    public Result(string Ra,string Sql, bool IsError, DateTime At, string Elapsed,bool Copied=false)
     {
         this.Ra = Ra;
         this.Sql = Sql;
@@ -23,13 +23,13 @@ public class Result
     }
    
 
-    public Result(string ra, string sql, bool isError, DateTime at, string timeInfo=null!)
+    public Result(string ra, string sql, bool isError, DateTime at)
     {
         Ra = ra;
         Sql = sql;
         IsError = isError;
         At = at;
-        Elapsed = timeInfo;
+        Elapsed = null!;
     }
 
     
