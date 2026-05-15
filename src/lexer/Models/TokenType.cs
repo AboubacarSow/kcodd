@@ -30,5 +30,6 @@ public enum TokenType
     STRING,
 
     EOF,
-    THETA_JOIN
+    THETA_JOIN,
+    NATURAL_JOIN
 }

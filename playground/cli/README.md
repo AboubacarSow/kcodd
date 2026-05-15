@@ -1,6 +1,6 @@
-# RA CLI Playground
+# KCodd CLI Playground
 
-An interactive command-line playground for the **Relational Algebra (RA) Engine**. Test and experiment with relational algebra expressions and see them transpiled to SQL in real-time.
+An interactive command-line playground for the **Relational Algebra Engine**. Test and experiment with relational algebra expressions and see them transpiled to SQL in real-time.
 
 ## Overview
 

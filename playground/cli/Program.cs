@@ -306,11 +306,11 @@ class Program
         return result;
     }
 
-    static readonly List<string> SetOfKeywords =
-    [
+    static readonly HashSet<string> SetOfKeywords = new(StringComparer.OrdinalIgnoreCase)
+    {
         "SELECT", "FROM", "WHERE", "AND", "OR", "NOT", "JOIN", "ON", "AS",
         "INNER", "LEFT", "RIGHT", "FULL", "OUTER", "GROUP BY", "ORDER BY",
         "HAVING", "DISTINCT", "UNION", "ALL", "EXCEPT", "INTERSECT",
         "IN", "IS", "NULL", "LIKE", "BETWEEN"
-    ];
+    };
 }

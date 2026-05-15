@@ -9,14 +9,14 @@ public class E2ETest
   [Fact]
   public void Should_Generate_Correct_ProjectionSql()
     {
-        string input = "π name (Students)";
+        string input = "π [name] (Students)";
         var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var ast = parser.Parse();
         var sql = new SqlGenerator();
         var result = sql.GenerateSql(ast);
         Assert.Equal(
-            "SELECT name FROM Students",
+            "SELECT DISTINCT name FROM Students",
             Normalize(result)
         );
     }

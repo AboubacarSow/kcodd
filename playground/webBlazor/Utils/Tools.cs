@@ -45,13 +45,13 @@ public static class Tools
         new("π [name] (Student) − π [name] (Graduate)",           "Difference"),
     ];
 
-    public static readonly List<string> SetOfKeywords =
-   [
-       "SELECT", "FROM", "WHERE", "AND", "OR", "NOT", "JOIN", "ON", "AS",
-        "INNER", "LEFT", "RIGHT", "FULL", "OUTER", "GROUP BY", "ORDER BY",
-        "HAVING", "DISTINCT", "UNION", "ALL", "EXCEPT", "INTERSECT",
-        "IN", "IS", "NULL", "LIKE", "BETWEEN"
-   ];
+    public static readonly HashSet<string> SetOfKeywords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "SELECT","DISTINCT","FROM","WHERE","AND","OR","NOT",
+        "JOIN","NATURAL","ON","UNION","INTERSECT","EXCEPT",
+        "AS","ALL","LEFT","RIGHT","FULL","OUTER","INNER",
+        "GROUP","BY","HAVING","ORDER","ASC","DESC","LIMIT"
+    };
 
 }
 

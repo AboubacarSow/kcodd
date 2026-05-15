@@ -28,11 +28,7 @@ It parses relational algebra expressions, builds Abstract Syntax Trees (ASTs), a
 
 ---
 
-## Current Status
 
-> Current version: `v1.0.0`
-
-> **In Active Developpement** 
 
 ### Supported Operators
 
@@ -49,81 +45,117 @@ It parses relational algebra expressions, builds Abstract Syntax Trees (ASTs), a
 
 ---
 
-## What it is
+## Project Context
 
-Most developers write SQL without ever thinking about what it means mathematically.
+KCodd is a relational algebra → SQL transpiler focused on
+compiler-style query processing.
 
-KCodd goes in the opposite direction:
+It parses relational algebra expressions, builds Abstract Syntax Trees (ASTs),
+and generates readable SQL targeting standard SQL dialects.
 
-Start from relational algebra, understand the primitives, construct the logical query tree, and let SQL emerge as a consequence of the transformation pipeline.
-
-This project is for people interested in:
-- database internals,
-- compiler architecture,
-- parsing systems,
-- AST transformations,
-- query optimization,
-- relational theory.
-
----
-
-## Features
-
-### ✅ Currently supported
-
-- **Selection (σ)** — filter rows with complex boolean conditions
-  - Comparison operators: `=`, `≠`, `>`, `≥`, `<`, `≤`
-  - Logical operators: `∧` (AND), `∨` (OR), `¬` (NOT)
-  - Nested conditions with parentheses
-  - String and numeric literals
-
-- **Projection (π)** — select specific columns with duplicate elimination
-  - Single or multiple attribute lists
-  - Set semantics (`DISTINCT` in SQL)
-
-- **Natural Join (⋈)** — join relations on all common attribute names
-  - Automatic attribute matching
-  - Multi-table join chains
-
-- **Theta Join (⋈θ)** — join with arbitrary conditions
-  - Generalizes natural join
-  - Supports any boolean condition
-
-- **Rename (ρ)** — alias relations for disambiguation
-  - Essential for self-joins and complex queries
-
-- **Union (∪)** — combine rows from two union-compatible relations
-  - Set union semantics (duplicates eliminated)
-
-- **Intersection (∩)** — find common rows between two relations
-
-- **Difference (−)** — subtract one relation from another
-
-- **Complex expressions**
-  - Arbitrarily nested operators
-  - Deep expression composition
-  - Proper operator precedence handling
+The project explores:
+- relational theory
+- compiler architecture
+- parsing systems
+- AST transformations
+- query generation
+- database internals
 
 ---
 
-## Planned Features
 
-- Cartesian Product (×)
-- Outer Joins: Left (⟕), Right (⟖), Full (⟗)
-- Division (÷)
-- Duplicate Elimination (δ)
-- Aggregation & Grouping (γ)
-- Sorting (τ)
-- SQL dialect specialization
-- Semantic/schema validation
-- Optimized AST
-- AST visualization
+## Highlights
+
+- Relational Algebra → SQL transpilation
+- Compiler-style architecture (Lexer → Parser → AST → SQL)
+- Interactive Blazor playground
+- CLI playground
+- E2E and parser testing
+- Dark/light theme
+- Nested relational algebra expressions
+---
+
+## Playground Preview
+
+### Web Playground
+<p align="center">
+<img src="assets/web-playground.png"  alt="Web playground">
+<br>
+<br>
+<img src="assets/web-playground-1.png" alt="Web playground">
+</p>
+
+### CLI Playground
+<p align="center">
+<img src="assets/cli-playground-2.png" alt="cli playground">
+</p>
+
+<p align="center">
+<img src="assets/cli-playground-1.png" alt="cli playground">
+</p>
+
+<p align="center">
+  <img src="assets/cli-playground.png">
+</p>
+
+
 
 ---
 
-# Quick Start
+## Current Status
 
-## CLI Playground
+> Current version: `v1.0.0`
+
+> **In Active Development** 
+
+---
+
+## ✅ Currently supported Operators
+
+- **Selection (σ)** 
+
+- **Projection (π)**
+
+- **Natural Join (⋈)** 
+
+- **Theta Join (⋈θ)**
+
+- **Rename (ρ)** 
+
+- **Union (∪)** 
+
+- **Intersection (∩)**
+
+- **Difference (−)**
+
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- .NET 9 or later
+
+
+```bash 
+git clone https://github.com/AboubacarSow/kcodd.git
+```
+Or you prefer SSH mode
+```bash
+git clone git@github.com:AboubacarSow/kcodd.git
+
+```
+### Build Solution 
+```bash 
+dotnet build kcodd.sln
+```
+### Test 
+
+```bash
+dotnet test --project tests/tests.csproj
+```
+### CLI Playground
 
 ```bash
 cd playground/cli
@@ -140,26 +172,9 @@ dotnet run
 Student ⋈ Enrolled
 
 Student ⋈θ [Student.id = Enrolled.student_id] Enrolled
-
-(Student ∪ Alumni)
-
-(Student ∩ HonorStudents)
-
-(Student − GraduatedStudents)
 ```
 
-### CLI Preview
-
-<p align="center">
-<img src="assets/cli-playground.png" alt="cli playground">
-</p>
-<p align="center">
-<img src="assets/cli-playground2.png" alt="cli playground">
-</p>
-
----
-
-## Web Playground
+### Web Playground
 
 ```bash
 cd playground/webBlazor
@@ -171,74 +186,6 @@ Open:
 ```text
 https://localhost:7200
 ```
-
-for the interactive Blazor playground.
-
-### Web Preview
-<p align="center">
-<img src="assets/web-playground.png"  alt="Web playground">
-<br>
-<br>
-<img src="assets/web-playground-1.png" alt="Web playground">
-</p>
-
----
-
-# Grammar
-
-```ebnf
-expression ::= projection
-             | selection
-             | join
-             | rename
-             | union
-             | intersection
-             | difference
-             | relation
-             | "(" expression ")"
-
-projection ::= "π" 
-               "[" attribute_list "]"
-               "(" expression ")"
-
-selection ::= "σ"
-              "[" condition "]"
-              "(" expression ")"
-
-natural-join ::= expression ("⋈" | "JOIN") expression
-
-theta-join ::= expression "⋈θ"
-               "[" condition "]"
-               expression
-
-rename ::= "ρ" 
-           identifier
-           "(" expression ")"
-
-union ::= expression "∪" expression
-
-intersection ::= expression "∩" expression
-
-difference ::= expression "−" expression
-
-condition ::= disjunction
-
-disjunction ::= conjunction
-                ("∨" conjunction)*
-
-conjunction ::= negation_expr
-                ("∧"  negation_expr)*
-
-negation_expr ::= "¬"  negation_expr
-                | comparison
-                | "(" condition ")"
-
-comparison ::= operand comparator operand
-
-comparator ::= "=" | "≠" | "<" | ">" | "<=" | ">="
-```
-
-See [`src/grammar/grammar.ebnf`](src/grammar/grammar.ebnf) for the complete formal grammar.
 
 ---
 
@@ -389,12 +336,7 @@ kcodd/
 │   ├── cli/            # Command-line playground
 │   └── webBlazor/      # Blazor web playground
 │
-├── tests/              # Unit and integration tests
-│
-└── docs/
-    ├── RELATIONAL_ALGEBRA.md
-    ├── architecture.md
-    └── learning-roadmap.md
+├── tests/             # Unit and integration tests
 ```
 
 ---
@@ -441,39 +383,68 @@ flowchart LR
 
     H --> I[SQL Output]
 ```
+---
 
+# Grammar
+
+```ebnf
+expression ::= projection
+             | selection
+             | join
+             | rename
+             | union
+             | intersection
+             | difference
+             | relation
+             | "(" expression ")"
+
+projection ::= "π" 
+               "[" attribute_list "]"
+               "(" expression ")"
+
+selection ::= "σ"
+              "[" condition "]"
+              "(" expression ")"
+
+natural-join ::= expression ("⋈" | "JOIN") expression
+
+rename ::= "ρ" 
+           identifier
+           "(" expression ")"
+
+union ::= expression "∪" expression
+
+intersection ::= expression "∩" expression
+
+difference ::= expression "−" expression
+```
+
+See [`src/grammar/grammar.ebnf`](src/grammar/grammar.ebnf) for the complete formal grammar.
+
+---
+
+## Planned Features
+
+- Cartesian Product (×)
+- Outer Joins: Left (⟕), Right (⟖), Full (⟗)
+- Division (÷)
+- Duplicate Elimination (δ)
+- Aggregation & Grouping (γ)
+- Sorting (τ)
+- SQL dialect specialization
+- Semantic/schema validation
+- Optimized AST
+- AST visualization
+- LaTeX rendering
 ---
 
 ## Design Principles
 
 - **Composability** — operators can nest arbitrarily
 - **Set semantics** — pure relational algebra behavior
-- **Optimization-first** — logical rewrites before generation
 - **Extensibility** — clean operator-oriented architecture
 - **Compiler-oriented design** — lexer → parser → AST → optimization → generation
 - **Standards compliance** — targets standard SQL dialects
-
----
-
-# Building
-
-```bash
-# Build everything
-dotnet build kcodd.sln
-
-# Run tests
-dotnet test tests/tests.csproj
-
-# Run CLI playground
-dotnet run --project playground/cli/cli.csproj
-
-# Run Web playground
-dotnet run --project playground/webBlazor/webBlazor.csproj
-```
-
-### Prerequisites
-
-- .NET 9 or later
 
 ---
 
@@ -484,6 +455,14 @@ dotnet run --project playground/webBlazor/webBlazor.csproj
 - No physical query execution engine
 - Optimizer currently performs logical rewrites only
 - No aggregation support yet
+
+---
+
+# Documentation
+
+- [Relational Algebra Reference](docs/RELATIONAL_ALGEBRA.md)
+- [Architecture Notes](docs/architecture.md)
+- [Learning Roadmap](docs/learning-roadmap.md)
 
 ---
 
@@ -507,13 +486,15 @@ Every modern SQL database traces back to his 1970 paper:
 
 KCodd is a small attempt to understand those foundations directly.
 
----
 
-# Documentation
+## Contributing
 
-- [Relational Algebra Reference](docs/RELATIONAL_ALGEBRA.md)
-- [Architecture Notes](docs/architecture.md)
-- [Learning Roadmap](docs/learning-roadmap.md)
+Contributions, feedback, issue reports, and educational usage are welcome.
 
----
+KCodd was built as a learning-oriented exploration of relational algebra,
+compiler design, and database internals.
+
+## License
+
+Distributed under the MIT License.
 

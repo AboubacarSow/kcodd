@@ -79,6 +79,7 @@ body {
     background: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
 }
 
 #app {
@@ -813,6 +814,31 @@ body {
    OUTPUT AREA
 ───────────────────────────────────────────────────────────── */
 
+
+.scroll-top-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface);
+
+  opacity: 0;
+    
+  pointer-events: none;
+
+  transform: translateY(8px);
+
+   transition:opacity .18s ease,transform .18s ease;
+}
+.scroll-top-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
 .output-area {
     flex: 1;
 
@@ -831,6 +857,7 @@ body {
     background: var(--bg);
 
     min-height: 0;
+
 }
 
 .output-empty {

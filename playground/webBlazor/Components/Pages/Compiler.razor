@@ -158,7 +158,7 @@
                     }
                     else
                     {
-                        <span>Run</span>
+                        <span style=@(_isDark? "color: black;" : "color: white;")>Run</span>
                     }
                 </button>
                 <button class="btn-ghost" @onclick="async () => await Clear()">Clear</button>
@@ -230,6 +230,12 @@
                 </div>
             }
         }
+        @if (_results.Count > 2)
+        {
+            <button class="scroll-top-btn" @onclick="ScrollToTop" title="Scroll to top">
+            <i class="fa-solid fa-angle-up" style=@(_isDark ? "color: white;" : "color: black;")></i>
+            </button>
+        }
     </div>
 
     <!-- ── History modal ── -->
@@ -277,13 +283,7 @@
     List<Result> _results = [];
     List<string> _history = [];
 
-    static readonly HashSet<string> _keywords = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "SELECT","DISTINCT","FROM","WHERE","AND","OR","NOT",
-        "JOIN","NATURAL","ON","UNION","INTERSECT","EXCEPT",
-        "AS","ALL","LEFT","RIGHT","FULL","OUTER","INNER",
-        "GROUP","BY","HAVING","ORDER","ASC","DESC","LIMIT"
-    };
+    static readonly HashSet<string> _keywords = Tools.SetOfKeywords;
 
 
     static IEnumerable<SqlToken> Tokenize(string sql)
@@ -300,7 +300,12 @@
     {
         var saved = await JS.InvokeAsync<string>("getTheme");
         _isDark = saved == "dark";
-        if (firstRender) { await LoadResults(); StateHasChanged(); }
+        if (firstRender) {
+            await LoadResults();
+            await JS.InvokeVoidAsync("initialiseButton");
+            StateHasChanged();
+              
+         }
     }
 
     // ── Persistence ────────────────────────────────────────────────────────────
@@ -395,7 +400,6 @@
             if (_history.Count > 30) _history.RemoveAt(0);
         }
 
-        await JS.InvokeVoidAsync("scrollToBottom", "outputPane");
     }
 
     async Task Copy(Result r)
@@ -404,5 +408,10 @@
         r.Copied = true; StateHasChanged();
         await Task.Delay(1800);
         r.Copied = false; StateHasChanged();
+    }
+
+    async Task ScrollToTop()
+    {
+        await JS.InvokeVoidAsync("scrollTop", "outputPane");
     }
 }

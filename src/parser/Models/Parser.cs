@@ -66,6 +66,7 @@ public class Parser
         return type switch
         {
             TokenType.JOIN => new JoinNode(left,right),
+            TokenType.NATURAL_JOIN => new NaturalJoinNode(((RelationNode)left).Name,((RelationNode)right).Name),
             TokenType.THETA_JOIN => new ThetaJoinNode(left,right,condition),
             TokenType.DIFFERENCE => new DifferenceNode(left,right),
             TokenType.UNION => new UnionNode(left,right),

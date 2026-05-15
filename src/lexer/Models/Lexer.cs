@@ -11,7 +11,7 @@ public class Lexer
         
         _position = 0;
     }
-    private readonly char [] _doubleCharOperator = ['>','<', '⨝'];
+    private readonly char [] _doubleCharOperator = ['>','<', '⨝', '⋈'];
     public Token NextToken()
     {
         SkipWhitespace();
@@ -100,6 +100,9 @@ public class Lexer
         if (Match("⨝θ"))
             return new Token(TokenType.THETA_JOIN, "⨝θ");
 
+        if (Match("⋈θ"))
+            return new Token(TokenType.THETA_JOIN, "⋈θ");
+
         return null;
     }
     private bool Match(string expected)
@@ -124,10 +127,12 @@ public class Lexer
         ['π'] = TokenType.PROJECT,
         ['σ'] = TokenType.SELECT,
         ['⨝'] = TokenType.JOIN,
+        ['⋈'] = TokenType.JOIN,
         ['ρ'] = TokenType.RENAME,
         ['∪'] = TokenType.UNION,
         ['∩'] = TokenType.INTERSECT,
         ['−'] = TokenType.DIFFERENCE,
+        ['-'] = TokenType.DIFFERENCE,
 
         ['¬'] = TokenType.NOT,
         ['>'] = TokenType.GT,
