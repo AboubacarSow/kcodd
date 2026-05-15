@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Division operator
 - LaTeX rendering
 - AST visualization
+- Tests for each layer(Lexer, Parser, SqlGenerator)
 
 ---
 
