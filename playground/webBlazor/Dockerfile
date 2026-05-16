@@ -3,7 +3,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet publish webBlazor.csproj \
+RUN dotnet publish playground/webBlazor/webBlazor.csproj \
     -c Release \
     -o /app/publish
 
