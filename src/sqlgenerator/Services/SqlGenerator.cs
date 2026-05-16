@@ -63,7 +63,7 @@ public class SqlGenerator
 
     private object FormatLiteral(string right)
     {
-        if(int.TryParse(right, out _))
+        if(int.TryParse(right, out _) || decimal.TryParse(right,out _))
             return right;    // Return as-is for numbers
         return $"'{right}'";   // Wrap in quotes for strings
     }
