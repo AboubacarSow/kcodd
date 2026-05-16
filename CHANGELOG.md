@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [1.0.0] - 2026-05-15
+## [1.0.0] - 2026-05-16
 
 ### Added
 - Relational Algebra → SQL transpilation engine
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - SQL generation from AST
 - Interactive Blazor playground
 - CLI playground
-- Selection, projection, joins, union, intersection, and difference operators
+- Selection, projection,rename, natural join,theta join, union, intersection, and difference operators
 - Query history support
 - Dark/light theme support
 - Unit and end-to-end tests

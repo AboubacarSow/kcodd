@@ -5,6 +5,15 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Version"/>
+  <img src="https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet" alt=".NET 9"/>
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="License"/>
+  <a href="https://kcodd.onrender.com">
+    <img src="https://img.shields.io/badge/playground-live-brightgreen?logo=render" alt="Playground"/>
+  </a>
+  <img src="https://img.shields.io/github/last-commit/AboubacarSow/kcodd" alt="Last Commit"/>
+</p>
+<p align="center">
   <strong>Relational Algebra → SQL Transpiler</strong>
 </p>
 
@@ -28,8 +37,11 @@ It parses relational algebra expressions, builds Abstract Syntax Trees (ASTs), a
 
 ---
 
+## Live Playground
 
+Try it out → [kcodd.onrender.com](https://kcodd.onrender.com)
 
+---
 ### Supported Operators
 
 | Operator | Symbol | Status |
