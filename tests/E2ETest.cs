@@ -95,6 +95,18 @@ public class E2ETest
             Normalize(result)
         );
     }
+    [Fact]
+    public void Input_WithDecimalValue_Should_Generate_Correct_Sql()
+    {
+        var input = "σ [gpa>3.5](students)";
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
+        var ast = parser.Parse();
+        var sqlgenerator = new SqlGenerator();
+        var result = sqlgenerator.GenerateSql(ast);
+        Assert.Equal("SELECT * FROM students WHERE (gpa > 3.5)",
+            Normalize(result));
+    }
 
     private string Normalize(string result)
     {
