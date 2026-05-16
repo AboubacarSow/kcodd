@@ -4,9 +4,9 @@ using webBlazor.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 
-//var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 //Configure Kestrel explicitly
-//builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
