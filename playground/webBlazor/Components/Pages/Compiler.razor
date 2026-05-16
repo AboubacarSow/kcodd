@@ -288,7 +288,7 @@
 
     static IEnumerable<SqlToken> Tokenize(string sql)
         => sql.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-              .Select(w => new SqlToken(w.TrimEnd(';', ','), _keywords.Contains(w.TrimEnd(';', ','))));
+              .Select(w => new SqlToken(w.TrimEnd(';'), _keywords.Contains(w.TrimEnd(';', ','))));
 
     // ── Data ──────────────────────────────────────────────────────────────────
     readonly OpGroup[]  _opGroups = Tools.OpGroups;
