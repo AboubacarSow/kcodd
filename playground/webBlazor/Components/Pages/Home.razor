@@ -5,35 +5,78 @@
 <PageTitle>KCodd — Relational Algebra Transpiler</PageTitle>
 
 <div class="home">
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <img src=@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg") alt="KCodd Logo" style="height: 40px; width: auto;" />
-        <button class="btn-theme home-theme-btn" @onclick="ToggleTheme" title="Toggle theme">
-        @if (_isDark)
-        {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
-                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
-                <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
-                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
-            </svg>
-        }
-        else
-        {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-        }
-        </button>
+
+    <!-- Header -->
+    <div class="home-header">
+
+        <div class="brand-section">
+            <img src="@(_isDark ? "/kcodd_logo_dark.svg" : "/kcodd_logo_light.svg")"
+                 alt="KCodd Logo"
+                 class="brand-logo" />
+        </div>
+
+        <div class="header-actions">
+            <div class="version-pill">
+                v1.0.0
+            </div>
+
+            <button class="btn-theme home-theme-btn"
+                    @onclick="ToggleTheme"
+                    title="Toggle theme">
+
+                @if (_isDark)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <circle cx="12" cy="12" r="4"/>
+                        <line x1="12" y1="2" x2="12" y2="6"/>
+                        <line x1="12" y1="18" x2="12" y2="22"/>
+                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+                        <line x1="2" y1="12" x2="6" y2="12"/>
+                        <line x1="18" y1="12" x2="22" y2="12"/>
+                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+                    </svg>
+                }
+                else
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                }
+            </button>
+        </div>
     </div>
 
+    <!-- Main content -->
     <div class="home-inner">
 
-        
+        <div class="hero-symbols">
+            π &nbsp; σ &nbsp; ⋈ &nbsp; ρ &nbsp; ∪ &nbsp; ∩
+        </div>
 
-        <h1 class="home-title">Relational Algebra<br/>to SQL</h1>
+        <h1 class="home-title">
+            Relational Algebra<br />
+            to SQL
+        </h1>
+
         <p class="home-sub">
-            Write RA expressions using standard operators.<br/>
-            Get clean SQL output instantly.
+            Parse relational algebra expressions,<br />
+            build ASTs, and transpile them into SQL.
         </p>
 
         <div class="home-ops">
@@ -46,7 +89,12 @@
             }
         </div>
 
-        <a class="home-cta" href="/compiler" style=@(_isDark ? "background-color: #555; color: #fff;" : "background-color: #ddd; color: #333;")>
+        <a class="home-cta"
+           href="/compiler"
+           style=@(_isDark
+               ? "background-color: #555; color: #fff;"
+               : "background-color: #ddd; color: #333;")>
+
             Open compiler →
         </a>
     </div>

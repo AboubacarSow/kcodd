@@ -18,7 +18,8 @@ public class Lexer
 
         if (_position >= _input.Length)
             return new Token(TokenType.EOF, "");
-
+        var previous = _position > 0 ? _input[_position - 1] : '\0';
+        
         char current = _input[_position];
         if (_doubleCharOperator.Contains(current) && _position + 1 < _input.Length
             && (_input[_position+1]=='=' || _input[_position+1]== 'θ'))
@@ -37,19 +38,19 @@ public class Lexer
 
         if (char.IsLetter(current))
             return Classify(ScanWord());
+        if(current.Equals('\''))
+            return ScanString();
 
         if (char.IsDigit(current))
             return ScanNumber();
-        //check the end of the _input 
-        if(_position >= _input.Length)
-            return new Token(TokenType.EOF, "");
 
-        throw new Exception($"Unexpected character: {current}");
+
+        throw new Exception($"Unexpected character: {current} after token {previous}");
     }
     private void SkipWhitespace()
     {
         while (_position < _input.Length &&
-            (char.IsWhiteSpace(_input[_position]) || _input[_position] == '\''))
+            char.IsWhiteSpace(_input[_position]))
             
         {
             _position++;
@@ -87,7 +88,26 @@ public class Lexer
         return new Token(TokenType.NUMBER, value);
     }
 
-   
+    private Token ScanString()
+    {
+        _position++; 
+        int start = _position;
+
+        while (_position < _input.Length &&
+            _input[_position] != '\'')
+        {
+            _position++;
+        }
+
+        if (_position >= _input.Length)
+            throw new Exception("Unterminated string literal");
+
+        string value = _input[start.._position];
+
+        _position++; // skip closing '
+
+        return new Token(TokenType.STRING, value);
+    }
     
     private Token? TryReadMultiCharOperator()
     {

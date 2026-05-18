@@ -203,6 +203,9 @@ public class Parser
      
         if (_current.Type == TokenType.IDENTIFIER)
             Eat(TokenType.IDENTIFIER);
+        else if(_current.Type == TokenType.STRING)
+            Eat(TokenType.STRING);
+        
         else if (_current.Type == TokenType.NUMBER)
             Eat(TokenType.NUMBER);
         else

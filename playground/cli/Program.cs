@@ -12,6 +12,7 @@ class Program
     static readonly ConsoleColor Sql     = ConsoleColor.DarkGray;
     static readonly ConsoleColor Keyword = ConsoleColor.DarkGreen;
     static readonly ConsoleColor Prompt  = ConsoleColor.DarkYellow;
+    static readonly ConsoleColor Version = ConsoleColor.Yellow;
 
     static int W => Math.Min(Console.WindowWidth > 0 ? Console.WindowWidth : 120, 82);
 
@@ -99,15 +100,20 @@ class Program
         foreach (var line in diamond)
         {
             Write("  ", Dim);
+            Write(line+ "                                                     ", Dim);
             WriteLine(line, Dim);
+
         }
+
 
         Console.WriteLine();
 
         // Wordmark
         int pad = (W - 5) / 2;
         Write(new string(' ', pad), Dim);
-        WriteLine("KCodd", Bright);
+        Write("KCodd", Bright);
+        WriteLine(" v1.0.0", Version);
+        Console.WriteLine();
 
         // Tagline
         string tag = "Kern · Codd · RA → SQL";
@@ -245,7 +251,7 @@ class Program
         Console.WriteLine();
         Console.WriteLine();
 
-        string msg = "goodbye.";
+        string msg = "Goodbye.";
         int pad = (W - msg.Length) / 2;
         Write(new string(' ', pad), Dim);
         WriteLine(msg, Dim);

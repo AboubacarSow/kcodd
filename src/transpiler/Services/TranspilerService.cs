@@ -18,7 +18,7 @@ public class TranspilerService : ITranspilerService
         var parser = new Parser(lexer);
 
         var ast = parser.Parse();
-
+        var show_ast = ast;
         var sqlGenerator = new SqlGenerator();
         return sqlGenerator.GenerateSql(ast);
     }
