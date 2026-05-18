@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sqlgenerator\sqlgenerator.csproj" />
-    <ProjectReference Include="..\transformer\transformer.csproj" />
+    <ProjectReference Include="..\parser\parser.csproj" />
   </ItemGroup>
-
 </Project>

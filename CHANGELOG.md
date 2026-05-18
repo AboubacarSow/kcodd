@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Cartesian product
 - Division operator
 - LaTeX rendering
-- AST visualization
+- AST visualization and its optimization
+- Explicite error message
 - Tests for each layer(Lexer, Parser, SqlGenerator)
 
 ---

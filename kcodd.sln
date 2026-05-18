@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "playground\cli\cli.c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webBlazor", "playground\webBlazor\webBlazor.csproj", "{4DD288FB-F47D-47AE-A712-B451239716D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "transformer", "src\transformer\transformer.csproj", "{484E97B4-1505-49B9-A21F-B8B649D61BE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,18 @@ Global
 		{4DD288FB-F47D-47AE-A712-B451239716D8}.Release|x64.Build.0 = Release|Any CPU
 		{4DD288FB-F47D-47AE-A712-B451239716D8}.Release|x86.ActiveCfg = Release|Any CPU
 		{4DD288FB-F47D-47AE-A712-B451239716D8}.Release|x86.Build.0 = Release|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Debug|x64.Build.0 = Debug|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Debug|x86.Build.0 = Debug|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Release|x64.ActiveCfg = Release|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Release|x64.Build.0 = Release|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Release|x86.ActiveCfg = Release|Any CPU
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +155,7 @@ Global
 		{6B7D4109-0082-406B-AE2F-61BE4F1946D4} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{EAB1F5B4-2DA1-4ECC-A0DD-25BE91BB85B6} = {9123F88B-E531-3118-42D7-ED8CEF4BD00E}
 		{4DD288FB-F47D-47AE-A712-B451239716D8} = {9123F88B-E531-3118-42D7-ED8CEF4BD00E}
+		{484E97B4-1505-49B9-A21F-B8B649D61BE9} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {801A14E9-39CA-40D3-B2A0-0129F15A19BD}
