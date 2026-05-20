@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\sqlgenerator\sqlgenerator.csproj" />
+    <ProjectReference Include="..\src\transpiler\transpiler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

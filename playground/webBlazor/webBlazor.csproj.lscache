@@ -70,6 +70,7 @@ Utils/
  lexer/obj/Debug/net9.0/ref/lexer.dll
  parser/obj/Debug/net9.0/ref/parser.dll
  sqlgenerator/obj/Debug/net9.0/ref/sqlgenerator.dll
+ transformer/obj/Debug/net9.0/ref/transformer.dll
  transpiler/obj/Debug/net9.0/ref/transpiler.dll
 <DOTNET>/packs/Microsoft.AspNetCore.App.Ref/9.0.14/ref/net9.0/
  Microsoft.AspNetCore.Antiforgery.dll

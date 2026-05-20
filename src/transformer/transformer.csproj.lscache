@@ -13,18 +13,18 @@ primary
 lastDtbSucceeded
 
 [properties]
-AssemblyName=transpiler
+AssemblyName=transformer
 CommandLineArgsForDesignTimeEvaluation=-langversion:13.0 -define:TRACE
 CompilerGeneratedFilesOutputPath=
 MaxSupportedLangVersion=13.0
 ProjectAssetsFile=<PATH>obj/project.assets.json
-RootNamespace=transpiler
+RootNamespace=transformer
 RunAnalyzers=
 RunAnalyzersDuringLiveAnalysis=
 SolutionPath=<PATH>../../kcodd.sln
 TargetFrameworkIdentifier=.NETCoreApp
-TargetPath=<PATH>bin/Debug/net9.0/transpiler.dll
-TargetRefPath=<PATH>obj/Debug/net9.0/ref/transpiler.dll
+TargetPath=<PATH>bin/Debug/net9.0/transformer.dll
+TargetRefPath=<PATH>obj/Debug/net9.0/ref/transformer.dll
 TemporaryDependencyNodeTargetIdentifier=net9.0
 
 [commandLineArguments]
@@ -43,8 +43,8 @@ TemporaryDependencyNodeTargetIdentifier=net9.0
 /debug:portable
 /filealign:512
 /optimize-
-/out:obj\Debug\net9.0\transpiler.dll
-/refout:obj\Debug\net9.0\refint\transpiler.dll
+/out:obj\Debug\net9.0\transformer.dll
+/refout:obj\Debug\net9.0\refint\transformer.dll
 /target:library
 /warnaserror-
 /utf8output
@@ -55,17 +55,15 @@ TemporaryDependencyNodeTargetIdentifier=net9.0
 [sourceFiles]
 obj/Debug/net9.0/
  .NETCoreApp,Version=v9.0.AssemblyAttributes.cs
- transpiler.AssemblyInfo.cs
- transpiler.GlobalUsings.g.cs
-Services/TranspilerService.cs
+ transformer.AssemblyInfo.cs
+ transformer.GlobalUsings.g.cs
+Tansformer.cs
 
 [metadataReferences]
 ../
  core/obj/Debug/net9.0/ref/core.dll
  lexer/obj/Debug/net9.0/ref/lexer.dll
  parser/obj/Debug/net9.0/ref/parser.dll
- sqlgenerator/obj/Debug/net9.0/ref/sqlgenerator.dll
- transformer/obj/Debug/net9.0/ref/transformer.dll
 <DOTNET>/packs/Microsoft.NETCore.App.Ref/9.0.14/ref/net9.0/
  Microsoft.CSharp.dll
  Microsoft.VisualBasic.Core.dll
@@ -247,4 +245,4 @@ Services/TranspilerService.cs
 [analyzerConfigFiles]
 ../../.editorconfig
 <DOTNET>/sdk/10.0.201/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_9_default.globalconfig
-obj/Debug/net9.0/transpiler.GeneratedMSBuildEditorConfig.editorconfig
+obj/Debug/net9.0/transformer.GeneratedMSBuildEditorConfig.editorconfig

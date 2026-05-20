@@ -7,30 +7,14 @@ public class Transformer
 {
     public static SelectionNode Transform(SelectionNode node)
     {
-        var source = node.Source;
-        var condition = node.Condition;
-        var typeofSource = source.GetType();
-        Console.WriteLine(typeofSource.ToString());
-        if(typeofSource.Equals(typeof(SelectionNode).Assembly))
+        ConditionNode previous = node.Condition;
+        ExpressionNode newsource=node.Source;
+        while (newsource is SelectionNode s)
         {
-            ConditionNode previous=null!;
-            ExpressionNode newsource=null!;
-            while (typeofSource.Equals(typeof(SelectionNode)))
-            {
-                var newcondition = (source as SelectionNode)!.Condition;
-                newsource = (source as SelectionNode)!.Source;
-                typeofSource = newsource.GetType();
-                if(previous==null)
-                    previous = newcondition;
-                else
-                {
-                    previous = new AndNode(previous,newcondition);
-                }
-                
-            }
-            return new SelectionNode(new AndNode(previous,condition),newsource);
+            previous = new AndNode(s.Condition,previous);
+            newsource = s.Source;
         }
-
-        return node;
+        return new SelectionNode(previous,newsource);
+        
     }
 }

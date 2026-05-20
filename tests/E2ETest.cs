@@ -1,6 +1,7 @@
 ﻿using lexer.Models;
 using parser.Models;
 using sqlgenerator.Services;
+using transpiler.Services;
 
 namespace tests;
 
@@ -106,6 +107,20 @@ public class E2ETest
         var result = sqlgenerator.GenerateSql(ast);
         Assert.Equal("SELECT * FROM students WHERE (gpa > 3.5)",
             Normalize(result));
+    }
+
+    [Fact] 
+    public void Transformer_Should_Normalize_SelectionNode()
+    {
+        var input = " σ [age > 18 ∨ gpa >= 3] (σ [gender='FEMALE'] (σ [height>1.8](students)))";
+
+        var transpiler = new TranspilerService();
+
+        var result = transpiler.Transpile(input);
+        var expected = "SELECT * FROM students WHERE (height > 1.8) AND (gender = 'FEMALE') AND (age > 18) OR (gpa >= 3)";
+
+        Assert.Equal(Normalize(expected),Normalize(result));
+
     }
 
     private string Normalize(string result)

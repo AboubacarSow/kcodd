@@ -2,6 +2,7 @@ using core.Nodes;
 using lexer.Models;
 using parser.Models;
 using sqlgenerator.Services;
+using transformer;
 
 namespace transpiler.Services;
 
@@ -19,8 +20,12 @@ public class TranspilerService : ITranspilerService
         var parser = new Parser(lexer);
 
         var ast = parser.Parse();
-        var new_ast = transformer.Transformer.Transform(ast as SelectionNode);
         var sqlGenerator = new SqlGenerator();
+        if( ast is SelectionNode s)
+        {
+           var new_ast = Transformer.Transform(s); 
+           return sqlGenerator.GenerateSql(new_ast);
+        }
         return sqlGenerator.GenerateSql(ast);
     }
 }
