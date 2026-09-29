@@ -6,11 +6,6 @@ using transformer;
 
 namespace transpiler.Services;
 
-public interface ITranspilerService
-{
-    string Transpile(string input);
-}
-
 public class TranspilerService : ITranspilerService
 {
     public string Transpile(string input)

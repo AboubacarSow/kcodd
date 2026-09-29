@@ -77,7 +77,7 @@ public class SqlGenerator
                 EXCEPT
                 {sourceSqlwith_righAttributes} AS {left_alias}2
                 WHERE 
-                {inputComparaison}";
+                {inputComparaison})";
     }
 
     private string GenerateProductSql(CartesienProductNode cartesien)
@@ -140,7 +140,7 @@ public class SqlGenerator
 
         return $"{leftsql} JOIN {rightSql} ON {conditionSql}";
     }
-    private string ExtractTableName(ExpressionNode node)
+    private static string ExtractTableName(ExpressionNode node)
     {
         if (node is RelationNode relation)
             return relation.Name;
@@ -153,7 +153,7 @@ public class SqlGenerator
         var sourceSql = GenerateSql(node.Source);
         return $"({sourceSql}) AS {node.Alias}";
     }
-    private string GenerateRelationSql(RelationNode node)
+    private static string GenerateRelationSql(RelationNode node)
     {
         return $"SELECT * FROM {node.Name}";
     }

@@ -68,7 +68,7 @@ public class Parser
 
         return left;
     } 
-    private ExpressionNode BuildBinaryNode(TokenType type,
+    private static ExpressionNode BuildBinaryNode(TokenType type,
     ExpressionNode left, ExpressionNode right, ConditionNode condition = null!)
     {
         return type switch
