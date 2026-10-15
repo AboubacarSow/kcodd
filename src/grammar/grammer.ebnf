@@ -26,6 +26,14 @@ natural-join ::= expression "⋈" expression
 
 theta-join ::= expression "⋈θ" "[" condition "]" expression 
 
+
+right-outer-join ::= expression '⟖' expression
+
+left-outer-join ::= expression '⟕' expression
+
+full-outer-join ::= expression '⟗' expression
+
+
 cartesian-product ::= expression "×" expression
 
 division ::= expression "÷" expression

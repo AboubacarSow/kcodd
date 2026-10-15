@@ -1,7 +1,7 @@
 using System.Reflection;
-using core.Nodes;
+using Core.Nodes;
 
-namespace transformer;
+namespace TransformerLayer;
 
 public class Transformer
 {

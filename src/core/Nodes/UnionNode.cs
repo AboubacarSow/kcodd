@@ -1,4 +1,4 @@
-namespace core.Nodes;
+namespace Core.Nodes;
 
 public class UnionNode : ExpressionNode
 {
@@ -11,3 +11,5 @@ public class UnionNode : ExpressionNode
         Right = right;
     }
 }
+
+

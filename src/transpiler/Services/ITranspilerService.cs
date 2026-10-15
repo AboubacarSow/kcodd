@@ -1,4 +1,4 @@
-namespace transpiler.Services;
+namespace TranspilerLayer.Services;
 
 public interface ITranspilerService
 {

@@ -1,10 +1,10 @@
-using core.Nodes;
-using lexer.Models;
-using parser.Models;
-using sqlgenerator.Services;
-using transformer;
+using Core.Nodes;
+using LexerLayer;
+using ParserLayer;
+using SQLGenerator;
+using TransformerLayer;
 
-namespace transpiler.Services;
+namespace TranspilerLayer.Services;
 
 public class TranspilerService : ITranspilerService
 {

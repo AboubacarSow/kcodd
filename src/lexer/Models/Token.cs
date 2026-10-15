@@ -1,4 +1,4 @@
-namespace lexer.Models;
+namespace LexerLayer.Models;
 
 public class Token
 {
@@ -8,10 +8,10 @@ public class Token
     public Token(TokenType type, string value)
     {
         Type = type;
-        Value = setValue(value);
+        Value = SetValue(value);
     }
 
-    private string setValue(string value)
+    private string SetValue(string value)
     {
         if(Type==TokenType.NEQ){
             return  "<>";

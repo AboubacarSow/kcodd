@@ -1,4 +1,4 @@
-namespace lexer.Models;
+namespace LexerLayer.Models;
 public enum TokenType
 {
     // Relational Algebra Operators
@@ -14,6 +14,10 @@ public enum TokenType
 
     UNION,
     INTERSECT,
+
+    LEFT_OUTER,
+    RIGHT_OUTER,
+    FULL_OUTER,
 
     // Logical Operators
     AND,         

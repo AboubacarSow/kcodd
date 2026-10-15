@@ -1,5 +1,5 @@
 
-namespace core.Nodes;
+namespace Core.Nodes;
 
 public class CartesienProductNode : ExpressionNode
 {

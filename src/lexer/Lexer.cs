@@ -1,4 +1,6 @@
-namespace lexer.Models;
+using LexerLayer.Models;
+
+namespace LexerLayer;
 
 public class Lexer
 {
@@ -11,7 +13,7 @@ public class Lexer
         
         _position = 0;
     }
-    private readonly char [] _doubleCharOperator = ['>','<', '⨝', '⋈'];
+    private readonly char [] _doubleCharOperator = ['>','<', '⨝', '⋈', '⟕', '⟖', '⟗'];
     public Token NextToken()
     {
         SkipWhitespace();
@@ -163,6 +165,10 @@ public class Lexer
         ['≠'] = TokenType.NEQ,
         ['∧']  = TokenType.AND,
         ['∨'] = TokenType.OR,
+
+        ['⟕'] = TokenType.LEFT_OUTER,
+        ['⟖'] = TokenType.RIGHT_OUTER,
+        ['⟗'] = TokenType.FULL_OUTER,
     };
 
    

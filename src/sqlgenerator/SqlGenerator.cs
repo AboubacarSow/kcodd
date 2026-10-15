@@ -1,6 +1,6 @@
-using core.Nodes;
+using Core.Nodes;
 
-namespace sqlgenerator.Services;
+namespace SQLGenerator;
 
 public class SqlGenerator
 {
@@ -29,11 +29,41 @@ public class SqlGenerator
             CartesienProductNode cartesien => GenerateProductSql(cartesien),
 
             DivisionNode division => GenerateDivisionSql(division),
+            LeftOuterJoinNode leftOuterJoin => GenerateLeftOuterJoin(leftOuterJoin),
+            RightOuterJoinNode rightOuterJoin => GenerateRightOuterJoin(rightOuterJoin),
+            FullOuterJoinNode fullOuterJoin => GenerateFullOuterJoin(fullOuterJoin),
 
             _ => throw new Exception($"Unsupported node type: {node.GetType().Name}")
         };
     }
 
+
+    private string GenerateLeftOuterJoin(LeftOuterJoinNode leftOuterJoin)
+    {
+        var left = GenerateSql(leftOuterJoin.Left);
+        var leftTableName = ExtractTableName(leftOuterJoin.Left);
+        var right = ExtractTableName(leftOuterJoin.Right);
+
+        return $"{left} LEFT JOIN {right} ON {leftTableName}.{right}_id={right}.id";
+    }
+
+    private string GenerateRightOuterJoin(RightOuterJoinNode rightOuterJoin)
+    {
+        var left = GenerateSql(rightOuterJoin.Left);
+        var leftTableName = ExtractTableName(rightOuterJoin.Left);
+        var right = ExtractTableName(rightOuterJoin.Right);
+
+        return $"{left} RIGHT JOIN {right} ON {leftTableName}.{right}_id={right}.id";
+    }
+
+    private string GenerateFullOuterJoin(FullOuterJoinNode leftOuterJoin)
+    {
+        var left = GenerateSql(leftOuterJoin.Left);
+        var leftTableName = ExtractTableName(leftOuterJoin.Left);
+        var right = ExtractTableName(leftOuterJoin.Right);
+
+        return $"{left} FULL OUTER JOIN {right} ON {leftTableName}.{right}_id={right}.id";
+    }
     private string GenerateDivisionSql(DivisionNode division)
     {
         var sourceSql = GenerateSql(division.Left.Source);
@@ -101,7 +131,7 @@ public class SqlGenerator
         return $"{sourceSql} WHERE {conditionSql}";
     }
 
-    private string GenerationConditionSql(ConditionNode condition)
+    private static string GenerationConditionSql(ConditionNode condition)
     {
         return condition switch
         {
@@ -113,12 +143,12 @@ public class SqlGenerator
         };
     }
 
-    private string GenerateComparisonSql(ComparisonNode node)
+    private static string GenerateComparisonSql(ComparisonNode node)
     {
         return $"{node.Left} {node.Operator} {FormatLiteral(node.Right)}";
     }
 
-    private object FormatLiteral(string right)
+    private static string FormatLiteral(string right)
     {
         if (int.TryParse(right, out _) || decimal.TryParse(right, out _) || right.Contains('.'))
             return right;

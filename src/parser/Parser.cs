@@ -1,8 +1,9 @@
-using core.Nodes;
-using lexer.Models;
+using Core.Nodes;
+using LexerLayer.Models;
+using LexerLayer;
 
 
-namespace parser.Models;
+namespace ParserLayer;
 
 public class Parser
 {
@@ -42,6 +43,9 @@ public class Parser
             TokenType.THETA_JOIN => true,
             TokenType.CARTESIEN_PRODUCT => true,
             TokenType.DIVISION =>true,
+            TokenType.LEFT_OUTER => true,
+            TokenType.RIGHT_OUTER =>true,
+            TokenType.FULL_OUTER =>true,
             _ => false
         };
     }
@@ -73,15 +77,18 @@ public class Parser
     {
         return type switch
         {
-            TokenType.JOIN => new JoinNode(left,right),
+            TokenType.JOIN => new JoinNode(left, right),
             TokenType.CARTESIEN_PRODUCT => new CartesienProductNode(left, right),
-            TokenType.NATURAL_JOIN => new NaturalJoinNode(left,right),
-            TokenType.THETA_JOIN => new ThetaJoinNode(left,right,condition),
-            TokenType.DIFFERENCE => new DifferenceNode(left,right),
-            TokenType.UNION => new UnionNode(left,right),
-            TokenType.INTERSECT => new IntersectionNode(left,right),
+            TokenType.NATURAL_JOIN => new NaturalJoinNode(left, right),
+            TokenType.THETA_JOIN => new ThetaJoinNode(left, right, condition),
+            TokenType.DIFFERENCE => new DifferenceNode(left, right),
+            TokenType.UNION => new UnionNode(left, right),
+            TokenType.INTERSECT => new IntersectionNode(left, right),
             TokenType.DIVISION => new DivisionNode((ProjectionNode)left, (ProjectionNode)right),
-            _ => throw new Exception($"Building Binary node: Unexpected token type: {type.ToString()}")
+            TokenType.LEFT_OUTER => new LeftOuterJoinNode(left, right),
+            TokenType.RIGHT_OUTER => new RightOuterJoinNode(left, right),
+            TokenType.FULL_OUTER => new FullOuterJoinNode(left, right),
+            _ => throw new Exception($"Building Binary node: Unexpected token type: {type}")
         };
     }
     private ExpressionNode ParseExpression()
@@ -97,7 +104,7 @@ public class Parser
         };
     }
 
-    private ExpressionNode ParseRename()
+    private RenameNode ParseRename()
     {
         Eat(TokenType.RENAME);
 
@@ -112,7 +119,7 @@ public class Parser
         return new RenameNode(alias,source);
     }
 
-    private ExpressionNode ParseProjection()
+    private ProjectionNode ParseProjection()
     {
         Eat(TokenType.PROJECT);
 
@@ -145,7 +152,7 @@ public class Parser
         return list;
     }
 
-    private ExpressionNode ParseRelation()
+    private RelationNode ParseRelation()
     {
         string name = _current.Value;
         Eat(TokenType.IDENTIFIER);
@@ -162,7 +169,7 @@ public class Parser
         return expr;
     }
 
-    private ExpressionNode ParseSelection()
+    private SelectionNode ParseSelection()
     {
         Eat(TokenType.SELECT);
         Eat(TokenType.LSB);
@@ -190,7 +197,7 @@ public class Parser
         return ParseComparison();
     }
 
-    private ConditionNode ParseComparison()
+    private ComparisonNode ParseComparison()
     {
         string left = _current.Value;
         Eat(TokenType.IDENTIFIER);

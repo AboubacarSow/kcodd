@@ -1,4 +1,4 @@
-namespace core.Nodes;
+namespace Core.Nodes;
 public class AndNode : ConditionNode
 {
     public ConditionNode Left { get; }

@@ -1,7 +1,7 @@
-﻿using lexer.Models;
-using parser.Models;
-using sqlgenerator.Services;
-using transpiler.Services;
+﻿using LexerLayer;
+using ParserLayer;
+using SQLGenerator;
+using TranspilerLayer.Services;
 
 namespace tests;
 
@@ -33,6 +33,47 @@ public class E2ETest
         var result = sql.GenerateSql(ast);
         Assert.Equal(
             "SELECT * FROM Students UNION SELECT * FROM Teachers",
+            Normalize(result)
+        );
+    }
+
+    [Fact]
+    public void LeftOuterJoin_Should_Generate_Correct_Sql()
+    {
+        string input = "students ⟕ departments";
+        var transpiler = new TranspilerService();
+
+        var result = transpiler.Transpile(input);
+
+        Assert.Equal(
+            "SELECT * FROM students LEFT JOIN departments ON students.departments_id=departments.id",
+            Normalize(result)
+        );
+    }
+
+    [Fact]
+    public void RightOuterJoin_Should_Generate_Correct_Sql()
+    {
+        string input = "students ⟖ departments";
+        var transpiler = new TranspilerService();
+
+        var result = transpiler.Transpile(input);
+
+        Assert.Equal(
+            "SELECT * FROM students RIGHT JOIN departments ON students.departments_id=departments.id",
+            Normalize(result)
+        );
+    }
+    [Fact]
+    public void FullOuterJoin_Should_Generate_Correct_Sql()
+    {
+        string input = "students ⟗ departments";
+        var transpiler = new TranspilerService();
+
+        var result = transpiler.Transpile(input);
+
+        Assert.Equal(
+            "SELECT * FROM students FULL OUTER JOIN departments ON students.departments_id=departments.id",
             Normalize(result)
         );
     }

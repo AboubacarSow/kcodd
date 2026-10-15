@@ -19,6 +19,7 @@ public static class Tools
             new("∪", "Union",      " ∪ "),
             new("∩", "Intersect",  " ∩ "),
             new("−", "Difference", " − "),
+            new("÷","Division"," ÷ "),
         ]),
         new("Logic",
         [

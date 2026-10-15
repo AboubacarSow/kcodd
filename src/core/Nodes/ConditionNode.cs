@@ -1,3 +1,3 @@
-namespace core.Nodes;
+namespace Core.Nodes;
 
 public abstract class ConditionNode{}
